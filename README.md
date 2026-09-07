@@ -1,12 +1,16 @@
+**简体中文** | [English](README.en.md)
+
 ![Flatland Research Coach：从观察到可检验的判断](assets/cover.svg)
 
 # Flatland Research Coach
 
 **用你自己的证据，形成你自己的研究判断。**
 
-一个面向 **Flatland 与铁路多智能体规划实验**的 Codex skill。通过少量、连续的问答，帮助你解释现象、提出可检验的假设、设计对照实验，并说清结论适用于什么条件。材料包含脱敏思考案例、提问与提示库，以及一张按需使用的实验记录卡。
+一个面向 **Flatland 与铁路多智能体规划实验**的通用 Markdown skill，可作为不同 AI agent 的教练指南。通过少量、连续的问答，帮助你解释现象、提出可检验的假设、设计对照实验，并说清结论适用于什么条件。材料包含脱敏思考案例、提问与提示库，以及一张按需使用的实验记录卡。
 
-*A Codex skill for evidence-led research in Flatland and railway multi-agent planning. It uses guided questions, anonymized reasoning cases, and experiment prompts to help learners develop and test their own ideas.*
+*An agent-agnostic Markdown coaching skill for evidence-led research in Flatland and railway multi-agent planning.*
+
+介绍页、skill 正文及配套材料均提供中英两版。它们是同一份指南的两种语言，无需安装两套。教练按你当前的语言偏好回应，也可以随时要求切换语言。
 
 ## 适合什么时候使用
 
@@ -50,11 +54,39 @@
 >
 > **教练：** 这能帮助区分几个层次。你会用什么结果决定修改原来的判断？
 
-## 安装
+## 在你的 agent 中使用
 
-### 推荐：让 Codex 安装
+核心内容是 Markdown，不依赖特定模型、API、插件或求解器。各平台是否自动发现 skill、放在哪个目录、怎样注册指令并不相同；下面的“读取指南”是通用方式，不表示克隆后会自动生效。
 
-在 Codex 中输入：
+### 能读取文件的 agent
+
+将仓库下载到你选定的目录，或执行：
+
+```bash
+git clone https://github.com/kidheart/flatland-research-coach.git
+```
+
+在该目录启动 agent，或把目录的实际路径提供给它，然后发送：
+
+```text
+请读取 flatland-research-coach 目录中的 SKILL.md，
+将它作为本次 Flatland 研究的教练指南，按需读取它链接的参考材料。
+请用中文回应。先利用我已提供的信息，
+围绕最关键的不确定性问一至两个问题，再共同设计实验。
+```
+
+英文使用者读取 [SKILL.en.md](SKILL.en.md)，英文参考材料位于 `references/en/`。如果你的平台有原生 skill 或自定义指令功能，可以按它自己的文档注册这份指南；`$flatland-research-coach` 等调用语法并非所有平台通用。
+
+### 只能对话或上传附件的 agent
+
+上传或粘贴 [SKILL.md](SKILL.md) 的完整内容，并说明希望按此指南讨论 Flatland。需要案例、提问库或实验卡时，再提供对应文件。只发送文件名或链接不意味着 agent 能读取内容；无法读取时，应由它说明还缺少哪些材料。
+
+这些说明提供可移植的使用方式，不代表已对每个模型或 agent 产品逐一验证；具体表现还取决于宿主的上下文长度、文件访问和工具能力。
+
+<details>
+<summary>可选：在 Codex 中安装为原生 skill</summary>
+
+可以在 Codex 中输入：
 
 ```text
 使用 $skill-installer，从 https://github.com/kidheart/flatland-research-coach
@@ -62,9 +94,7 @@
 如果同名安装目录已经存在，请先说明情况，不要覆盖。
 ```
 
-### 手动安装：PowerShell
-
-已安装 Git 时，可将仓库克隆到 Codex 的用户级 skill 目录。以下命令会在目标目录已存在时停止：
+也可以使用 PowerShell 克隆到 Codex 的用户级 skill 目录。以下命令会在目标目录已存在时停止：
 
 ```powershell
 $skillPath = Join-Path $HOME '.agents/skills/flatland-research-coach'
@@ -81,16 +111,18 @@ if ($LASTEXITCODE -ne 0) {
 }
 ```
 
-安装后重启 Codex，让新会话重新发现 skill，再用下面的提示词开始。关于 skill 目录和安装方式，参见 [OpenAI 的 skill 文档](https://learn.chatgpt.com/docs/build-skills)。
+安装后在新会话中使用 `$flatland-research-coach`；如果尚未发现它，重启 Codex。关于 skill 目录和安装方式，参见 [OpenAI 的 skill 文档](https://learn.chatgpt.com/docs/build-skills)。`agents/openai.yaml` 仅为这一可选适配提供展示信息，其他 agent 不需要读取它。
+
+</details>
 
 ## 直接开始
 
-选择一个最接近当前困惑的提示词，附上你有权使用的相关材料即可。
+加载指南后，选择一个最接近当前困惑的提示词，附上你有权使用的相关材料即可。以下提示词不依赖平台专属调用语法。
 
 **从一个研究问题开始**
 
 ```text
-使用 $flatland-research-coach。
+请按已加载的 Flatland Research Coach 指南开展讨论。
 先阅读我提供的环境说明和实验记录，复述你已经知道的事实。
 围绕当前最关键的不确定性，每次问我一至两个问题，
 帮助我提出能被推翻的假设，并共同设计下一步实验。
@@ -99,7 +131,7 @@ if ($LASTEXITCODE -ne 0) {
 **追查计划与执行的分歧**
 
 ```text
-使用 $flatland-research-coach。
+请按已加载的 Flatland Research Coach 指南开展讨论。
 我提供了自己的计划轨迹、实际轨迹和动作接口说明。
 请先找出第一次分歧，区分已知事实与可能解释，
 再帮助我设计一个小检查来定位原因。
@@ -108,7 +140,7 @@ if ($LASTEXITCODE -ne 0) {
 **判断一次改善说明了什么**
 
 ```text
-使用 $flatland-research-coach。
+请按已加载的 Flatland Research Coach 指南开展讨论。
 请审视我提供的前后两次实验：它们是否从可比的起点开始，
 使用了什么资源，实际完成了多少工作，失败或超时是否进入统计？
 帮助我区分效率变化、策略变化和完整执行收益，并说清证据的边界。
@@ -117,7 +149,7 @@ if ($LASTEXITCODE -ne 0) {
 **只有一个想法，还没有实验**
 
 ```text
-使用 $flatland-research-coach。
+请按已加载的 Flatland Research Coach 指南开展讨论。
 我暂时没有运行数据。请用一个明确标注为虚构的铁路小例，
 带我练习区分观察与解释，并设计能够区分两种解释的实验。
 先让我表达判断；我卡住时再逐步给提示。
@@ -127,11 +159,11 @@ if ($LASTEXITCODE -ne 0) {
 
 | 文件 | 用途 |
 | --- | --- |
-| [SKILL.md](SKILL.md) | 教练的入口：问答流程、帮助深度、判断标准与资料边界。 |
-| [提问与提示库](references/question-bank.md) | 按目标、接口、实验、泛化和结果解释等困惑选择问题。 |
-| [实验记录卡](references/experiment-card.md) | 记录预期、实际结果、反证条件及下一步选择。 |
-| [脱敏思考案例](references/reasoning-cases.md) | 看定性观察如何改变判断，以及哪些新证据会使判断失效。 |
-| [agents/openai.yaml](agents/openai.yaml) | Codex 中的展示名称、简介与默认提示词。 |
+| [中文 skill](SKILL.md) · [English skill](SKILL.en.md) | 教练的入口：问答流程、帮助深度、判断标准与资料边界。 |
+| [提问与提示库](references/question-bank.md) · [English](references/en/question-bank.md) | 按目标、接口、实验、泛化和结果解释等困惑选择问题。 |
+| [实验记录卡](references/experiment-card.md) · [English](references/en/experiment-card.md) | 记录预期、实际结果、反证条件及下一步选择。 |
+| [脱敏思考案例](references/reasoning-cases.md) · [English](references/en/reasoning-cases.md) | 看定性观察如何改变判断，以及哪些新证据会使判断失效。 |
+| [agents/openai.yaml](agents/openai.yaml) | 可选的 Codex 展示信息；通用使用不依赖此文件。 |
 | [LICENSE](LICENSE) | 本仓库的许可条款。 |
 
 ## 研究结论的边界

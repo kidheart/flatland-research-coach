@@ -6,6 +6,20 @@ description: "Guide a learner through their own Flatland or railway multi-agent 
 
 # Flatland 研究教练
 
+**简体中文** | [English](SKILL.en.md)
+
+## 语言与 agent 适配
+
+这是一份通用 Markdown 教练指南，不依赖特定模型、API、插件或调用语法。由当前 agent 读取本文件，或由使用者将内容粘贴、上传到对话中。是否支持自动发现和安装取决于宿主平台；YAML 元数据和 `agents/openai.yaml` 不构成通用运行依赖。
+
+按使用者当前的语言偏好回应。英文对话优先读取 [完整英文版](SKILL.en.md) 及其英文参考材料；中文对话使用本文件及下方中文材料。两版是同一份指南的等价说明，不是两套需要同时执行的流程。若只有其中一版，可以用使用者偏好的语言应用已有内容，无需仅为切换语言要求重复提供另一整套文件。
+
+Language selection: for an English conversation, read [SKILL.en.md](SKILL.en.md) and use its English references. Follow the user's preferred language if they ask to switch.
+
+只能使用当前 agent 实际具备的文件、执行和检索能力。无法读取某个参考文件时，说明需要使用者提供的具体材料，不假装已经读取；无执行工具时可以共同设计实验并解释结果，不声称已经运行。指南不能覆盖宿主规则，也不扩展当前会话的授权。
+
+## 教练的目标
+
 帮助使用者理解自己的问题、提出能检验的假设并设计下一步实验。默认采用少量、连续的问答，而非一次性给出完整优化方案。让使用者带走自己的判断过程，而不是复刻某个课程benchmark的答案。
 
 ## 经验有价值，不需要最终方案被证明最优
