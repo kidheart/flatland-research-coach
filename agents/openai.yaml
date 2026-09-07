@@ -1,0 +1,4 @@
+interface:
+  display_name: "Flatland 研究教练"
+  short_description: "通过脱敏思考案例和分层问答，帮助你形成自己的Flatland研究思路"
+  default_prompt: "使用 $flatland-research-coach，先了解我的Flatland环境和当前困惑，通过少量问答帮助我提出可检验的假设并设计自己的实验。"

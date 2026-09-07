@@ -1,0 +1,22 @@
+# Keep local experiments and editor files out of the teaching package.
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+.env.*
+local/
+private/
+experiments/
+results/
+*.log
+*.zip
+*.7z
+*.pkl
+*.pickle
+*.npy
+*.npz
