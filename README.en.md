@@ -1,14 +1,14 @@
 [简体中文](README.md) | **English**
 
-![Flatland Research Coach: from observations to testable judgments](assets/cover.svg)
+![Flatland Research Loop: from observations to testable judgments](assets/cover.svg)
 
-# Flatland Research Coach
+# Flatland Research Loop
 
 **Evidence-guided Flatland Optimization**
 
 An **autonomous Flatland optimization workflow informed by anonymized cases from real experiments**, delivered as an agent-agnostic Markdown skill. Starting from your existing project, an agent reviews evidence, proposes changes, runs evaluations, and preserves the best verified version within defined objectives, constraints, and budgets. Interactive coaching is an optional mode for explicit requests to learn or work through questions.
 
-The repository and skill retain the name `flatland-research-coach`, so existing links and installation instructions remain usable.
+The repository and skill use the identifier `flatland-research-loop`. Loop refers to the research cycle of observation, hypothesis, experiment, validation, and revision.
 
 The general way to use it is to give an agent the Markdown instructions to read. You can use local files with an agent that supports file access, or upload or paste the text into a chat tool. Automatic discovery, installation, and persistence depend on the host platform; this repository does not assume every agent recognizes a skill format automatically.
 
@@ -63,20 +63,20 @@ Chinese and English are two editions of the same skill. **Load the edition you p
 Choose a folder you can give your agent access to. This PowerShell example requires Git and downloads the repository into your home directory without changing any agent's global configuration. It stops if the destination already exists:
 
 ```powershell
-$coachPath = Join-Path $HOME 'flatland-research-coach'
+$researchLoopPath = Join-Path $HOME 'flatland-research-loop'
 
-if (Test-Path -LiteralPath $coachPath) {
+if (Test-Path -LiteralPath $researchLoopPath) {
     throw 'The destination already exists. Check the existing folder before making changes; do not overwrite it.'
 }
 
-git clone https://github.com/kidheart/flatland-research-coach.git "$coachPath"
+git clone https://github.com/kidheart/flatland-research-loop.git "$researchLoopPath"
 
 if ($LASTEXITCODE -ne 0) {
     throw 'Cloning did not complete. Check the Git output and destination directory before proceeding.'
 }
 ```
 
-You can also download the repository files from [GitHub](https://github.com/kidheart/flatland-research-coach) and keep them in an ordinary folder of your choice.
+You can also download the repository files from [GitHub](https://github.com/kidheart/flatland-research-loop) and keep them in an ordinary folder of your choice.
 
 ### 2. Give an agent the instructions
 
@@ -106,8 +106,8 @@ Ask Codex to install it:
 
 ```text
 Use $skill-installer to install the skill at the root of
-https://github.com/kidheart/flatland-research-coach
-with the name flatland-research-coach.
+https://github.com/kidheart/flatland-research-loop
+with the name flatland-research-loop.
 If an installation directory with that name already exists,
 explain the situation before proceeding and do not overwrite it.
 ```
@@ -115,14 +115,14 @@ explain the situation before proceeding and do not overwrite it.
 Alternatively, with Git installed, clone it into Codex's user-level skill directory using PowerShell. These commands stop if the destination already exists:
 
 ```powershell
-$skillPath = Join-Path $HOME '.agents/skills/flatland-research-coach'
+$skillPath = Join-Path $HOME '.agents/skills/flatland-research-loop'
 
 if (Test-Path -LiteralPath $skillPath) {
     throw 'The destination already exists. Check the current installation before making changes; do not overwrite it.'
 }
 
 New-Item -ItemType Directory -Force -Path (Split-Path -Parent $skillPath) | Out-Null
-git clone https://github.com/kidheart/flatland-research-coach.git "$skillPath"
+git clone https://github.com/kidheart/flatland-research-loop.git "$skillPath"
 
 if ($LASTEXITCODE -ne 0) {
     throw 'Cloning did not complete. Check the Git output and destination directory before proceeding.'
@@ -132,7 +132,7 @@ if ($LASTEXITCODE -ne 0) {
 After installation, start a new conversation; restart Codex if it has not discovered the skill. You can then begin with:
 
 ```text
-Use $flatland-research-coach and respond in English.
+Use $flatland-research-loop and respond in English.
 First read the environment description and experiment records I provide,
 then carry out autonomous research for my project or optimization request
 within the stated constraints and resource budget.
@@ -266,7 +266,7 @@ If your explanation has stronger evidence, the judgments in the cases should be 
 
 ## Contributing
 
-Discuss improvements in an [Issue](https://github.com/kidheart/flatland-research-coach/issues), or submit a [Pull Request](https://github.com/kidheart/flatland-research-coach/pulls) with:
+Discuss improvements in an [Issue](https://github.com/kidheart/flatland-research-loop/issues), or submit a [Pull Request](https://github.com/kidheart/flatland-research-loop/pulls) with:
 
 - Questions that distinguish explanations, and useful progressive hints for learners who are stuck.
 - Clearly labeled fictional teaching examples, or sufficiently anonymized qualitative reasoning cases that you have permission to publish.
@@ -282,4 +282,4 @@ Do not submit private solutions, code, parameters, configurations, scores, logs,
 
 Suggested attribution:
 
-> Based on [Flatland Research Coach](https://github.com/kidheart/flatland-research-coach) by kidheart, licensed under [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/). Describe any changes here.
+> Based on [Flatland Research Loop](https://github.com/kidheart/flatland-research-loop) by kidheart, licensed under [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/). Describe any changes here.

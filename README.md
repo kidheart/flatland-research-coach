@@ -1,8 +1,10 @@
 **简体中文** | [English](README.en.md)
 
-![Flatland Research Coach：从观察到可检验的判断](assets/cover.svg)
+![Flatland Research Loop：从观察到可检验的判断](assets/cover.svg)
 
-# Flatland Research Coach
+# Flatland Research Loop
+
+**Flatland 自动研究**
 
 **Evidence-guided Flatland Optimization**
 
@@ -10,7 +12,7 @@
 
 *An agent-agnostic workflow for autonomous Flatland optimization, informed by anonymized cases from real experiments.*
 
-介绍页、skill 正文及配套材料均提供中英两版。它们是同一份指南的两种语言，无需安装两套。agent 按你当前的语言偏好回应，也可以随时要求切换语言。仓库与 skill 名称保留为 `flatland-research-coach`，现有链接和安装方式继续使用。
+介绍页、skill 正文及配套材料均提供中英两版。它们是同一份指南的两种语言，无需安装两套。agent 按你当前的语言偏好回应，也可以随时要求切换语言。仓库与 skill 标识统一为 `flatland-research-loop`；Loop 对应观察、假设、实验、验证与修正的研究循环。
 
 ## 适合什么时候使用
 
@@ -61,20 +63,20 @@
 将仓库下载到你选定的目录，或执行：
 
 ```bash
-git clone https://github.com/kidheart/flatland-research-coach.git
+git clone https://github.com/kidheart/flatland-research-loop.git
 ```
 
 在该目录启动 agent，或把目录的实际路径提供给它，然后发送：
 
 ```text
-请读取 flatland-research-coach 目录中的 SKILL.md，
+请读取 flatland-research-loop 目录中的 SKILL.md，
 将它作为本次 Flatland 自动优化的工作指南，按需读取它链接的参考材料。
 请用中文回应。先利用我已提供的信息，
 对现成项目或优化请求默认开展自动研究，并遵守项目约束和资源预算。
 只有我明确要求学习或问答时，才切换为交互教练。
 ```
 
-英文使用者读取 [SKILL.en.md](SKILL.en.md)，英文参考材料位于 `references/en/`。如果你的平台有原生 skill 或自定义指令功能，可以按它自己的文档注册这份指南；`$flatland-research-coach` 等调用语法并非所有平台通用。
+英文使用者读取 [SKILL.en.md](SKILL.en.md)，英文参考材料位于 `references/en/`。如果你的平台有原生 skill 或自定义指令功能，可以按它自己的文档注册这份指南；`$flatland-research-loop` 等调用语法并非所有平台通用。
 
 ### 只能对话或上传附件的 agent
 
@@ -88,29 +90,29 @@ git clone https://github.com/kidheart/flatland-research-coach.git
 可以在 Codex 中输入：
 
 ```text
-使用 $skill-installer，从 https://github.com/kidheart/flatland-research-coach
-安装仓库根目录的 skill，名称为 flatland-research-coach。
+使用 $skill-installer，从 https://github.com/kidheart/flatland-research-loop
+安装仓库根目录的 skill，名称为 flatland-research-loop。
 如果同名安装目录已经存在，请先说明情况，不要覆盖。
 ```
 
 也可以使用 PowerShell 克隆到 Codex 的用户级 skill 目录。以下命令会在目标目录已存在时停止：
 
 ```powershell
-$skillPath = Join-Path $HOME '.agents/skills/flatland-research-coach'
+$skillPath = Join-Path $HOME '.agents/skills/flatland-research-loop'
 
 if (Test-Path -LiteralPath $skillPath) {
     throw '目标目录已存在。请检查现有安装，不要直接覆盖。'
 }
 
 New-Item -ItemType Directory -Force -Path (Split-Path -Parent $skillPath) | Out-Null
-git clone https://github.com/kidheart/flatland-research-coach.git "$skillPath"
+git clone https://github.com/kidheart/flatland-research-loop.git "$skillPath"
 
 if ($LASTEXITCODE -ne 0) {
     throw '克隆未完成。请检查 Git 输出和目标目录后再处理。'
 }
 ```
 
-安装后在新会话中使用 `$flatland-research-coach`；如果尚未发现它，重启 Codex。关于 skill 目录和安装方式，参见 [OpenAI 的 skill 文档](https://learn.chatgpt.com/docs/build-skills)。`agents/openai.yaml` 仅为这一可选适配提供展示信息，其他 agent 不需要读取它。
+安装后在新会话中使用 `$flatland-research-loop`；如果尚未发现它，重启 Codex。关于 skill 目录和安装方式，参见 [OpenAI 的 skill 文档](https://learn.chatgpt.com/docs/build-skills)。`agents/openai.yaml` 仅为这一可选适配提供展示信息，其他 agent 不需要读取它。
 
 </details>
 
@@ -153,7 +155,7 @@ if ($LASTEXITCODE -ne 0) {
 **从一个研究问题开始**
 
 ```text
-请按已加载的 Flatland Research Coach 指南，以交互教练模式开展讨论。
+请按已加载的 Flatland Research Loop 指南，以交互教练模式开展讨论。
 先阅读我提供的环境说明和实验记录，复述你已经知道的事实。
 围绕当前最关键的不确定性，每次问我一至两个问题，
 帮助我提出能被推翻的假设，并共同设计下一步实验。
@@ -162,7 +164,7 @@ if ($LASTEXITCODE -ne 0) {
 **追查计划与执行的分歧**
 
 ```text
-请按已加载的 Flatland Research Coach 指南，以交互教练模式开展讨论。
+请按已加载的 Flatland Research Loop 指南，以交互教练模式开展讨论。
 我提供了自己的计划轨迹、实际轨迹和动作接口说明。
 请先找出第一次分歧，区分已知事实与可能解释，
 再帮助我设计一个小检查来定位原因。
@@ -171,7 +173,7 @@ if ($LASTEXITCODE -ne 0) {
 **判断一次改善说明了什么**
 
 ```text
-请按已加载的 Flatland Research Coach 指南，以交互教练模式开展讨论。
+请按已加载的 Flatland Research Loop 指南，以交互教练模式开展讨论。
 请审视我提供的前后两次实验：它们是否从可比的起点开始，
 使用了什么资源，实际完成了多少工作，失败或超时是否进入统计？
 帮助我区分效率变化、策略变化和完整执行收益，并说清证据的边界。
@@ -180,7 +182,7 @@ if ($LASTEXITCODE -ne 0) {
 **只有一个想法，还没有实验**
 
 ```text
-请按已加载的 Flatland Research Coach 指南，以交互教练模式开展讨论。
+请按已加载的 Flatland Research Loop 指南，以交互教练模式开展讨论。
 我暂时没有运行数据。请用一个明确标注为虚构的铁路小例，
 带我练习区分观察与解释，并设计能够区分两种解释的实验。
 先让我表达判断；我卡住时再逐步给提示。
@@ -230,7 +232,7 @@ Flatland 环境之间的版本、转移规则、速度、故障可见性、目�
 
 ## 贡献
 
-欢迎通过 [Issue](https://github.com/kidheart/flatland-research-coach/issues) 讨论改进，或通过 [Pull Request](https://github.com/kidheart/flatland-research-coach/pulls) 提交：
+欢迎通过 [Issue](https://github.com/kidheart/flatland-research-loop/issues) 讨论改进，或通过 [Pull Request](https://github.com/kidheart/flatland-research-loop/pulls) 提交：
 
 - 能区分不同解释的提问，以及使用者卡住时有效的渐进提示。
 - 明确标注的虚构教学例，或有权公开并充分脱敏的定性思考案例。
@@ -246,4 +248,4 @@ Flatland 环境之间的版本、转移规则、速度、故障可见性、目�
 
 可参考的署名：
 
-> 基于 kidheart 的 [Flatland Research Coach](https://github.com/kidheart/flatland-research-coach)，采用 [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)；如有改动，请在此说明。
+> 基于 kidheart 的 [Flatland Research Loop](https://github.com/kidheart/flatland-research-loop)，采用 [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)；如有改动，请在此说明。

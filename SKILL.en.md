@@ -1,12 +1,12 @@
 ---
-name: flatland-research-coach
+name: flatland-research-loop
 license: CC-BY-NC-4.0
 description: "Guide evidence-based Flatland optimization using real anonymized research cases, bounded autonomous experiments, and agent collaboration. Use to diagnose failures, choose testable directions, implement and evaluate changes in the user's own project, or provide interactive coaching when requested. 自动研究为主，不提供原作者解法或满分配置。"
 ---
 
 **English** | [简体中文](SKILL.md)
 
-# Flatland Autonomous Research Workflow
+# Flatland Research Loop
 
 ## Language and agent compatibility
 
