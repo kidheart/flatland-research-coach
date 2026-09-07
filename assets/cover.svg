@@ -7,7 +7,7 @@
     <path d="M880 80H1440M880 160H1440M880 240H1440M880 320H1440M880 400H1440M880 480H1440"/>
   </g>
   <g font-family="Arial, Helvetica, sans-serif">
-    <rect x="64" y="56" width="284" height="36" rx="18" fill="#173f37"/>
+    <rect x="64" y="56" width="320" height="36" rx="18" fill="#173f37"/>
     <text x="84" y="80" fill="#ffffff" font-size="15" font-weight="700" letter-spacing="2">FLATLAND RESEARCH COACH</text>
     <text x="64" y="184" fill="#173f37" font-size="62" font-weight="700" letter-spacing="-2">Better questions.</text>
     <text x="64" y="255" fill="#173f37" font-size="62" font-weight="700" letter-spacing="-2">Stronger experiments.</text>
