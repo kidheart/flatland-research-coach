@@ -1,114 +1,124 @@
-# Real Anonymized Cases: Attempts, Failures, and Revised Judgments
+# Real Anonymized Cases: From Observations to Code Decisions
 
 [简体中文](../reasoning-cases.md) | **English**
 
-These cases describe real attempts from a single Flatland research effort. They were rewritten after the creator authorized a review of experiment notes, structured results, and historical evaluation tables. Organized by research difficulty, they include both directions that were not retained and positive results that hold under specific conditions. Their order does not describe a final architecture or recommended combination. The hypotheses restate the reasoning suggested by the changes and their context at the time; they are not direct quotations.
+These cases come from one Flatland research effort, rewritten after the creator authorized a review of experiment notes, structured results, and historical evaluation tables. They include discarded directions and conditional positive results; their order implies no final architecture or recommended combination. Rationales restate hypotheses suggested by the changes and context, rather than direct quotations.
 
-To protect the original solution, this document omits source code, exact parameters, version identifiers, per-instance scores, and raw logs. It is therefore a qualitative case report grounded in source records, not a public performance comparison that readers can independently reproduce. Each case states its evidence type and limitations, and separates actions taken at the time from experiments suggested now. In autonomous mode, the agent investigates the questions and runs experiments; the user does not have to answer them first.
+Source code, exact parameters, version identifiers, per-instance scores, and raw logs are omitted. This is a qualitative report grounded in records, not an independently reproducible public performance comparison. Each card separates real history and its limits from current decision rules; those rules add no historical facts.
 
-## Choose a case that matches the current observation
+## Diagnose first, then select a relevant card
 
-The suggested experiments below are research options, not a checklist for every round. Start with existing records and short smoke checks; select a relevant comparison only when its outcome could change the current decision. Follow the escalation conditions in the [autonomous workflow](autonomous-research.md), without running every comparison to retrace the original research.
+Start with [diagnosis and modification decisions](diagnosis.md). Diagnose from current project evidence before drawing on a similar case; these six cases may not cover your environment. The hypotheses in this index require checking, rather than following directly from the observations.
 
-| Current observation | Relevant case | First action |
+| Current observation | Diagnostic hypothesis to check | Card |
 | --- | --- | --- |
-| Search has reached a plateau, and you are considering relaxing the acceptance rule | C1: Allowing sideways moves and temporary deterioration | Check whether new states are actually explored and whether the best solution returned benefits. |
-| A method helps from a weak starting point but adds little to the complete system | C2: Joint search for small groups of trains | Measure its marginal value from the same saved, mature plan. |
-| Repeated data maintenance consumes substantial time | C3: Maintaining reservations incrementally | Compare states and rollback behavior before measuring throughput under a fixed workload. |
-| More tasks finish and aggregate cost falls, but the actual evaluation worsens | C4: Aggregate metrics disagree with the evaluation | Verify versions and per-instance results; stop substituting a proxy for the actual objective. |
-| A broader repair plan looks better, but execution regresses | C5: Comparing a broader rescheduling plan with the existing plan | Trace plan replacement through to changes in execution, and check complete execution results. |
-| The same candidates repeatedly receive priority, while later opportunities remain unclear | C6: Broadening coverage of candidate starting points | Record actual coverage and compare the coverage policy separately from extra budget. |
+| Improvement stalls; relaxed acceptance increases activity | Lost best solutions, repeated visits, or no benefit from the current acceptance rule | C1 |
+| A method helps weak starts but adds little to the full system | Incomparable starts, duplicated stages, or unresolved joint constraints | C2 |
+| Reservation maintenance takes substantial time | Rebuilding is a bottleneck and unchanged state can safely be reused | C3 |
+| Completions and total cost improve, but the actual score falls | Misassociated results, a mismatched proxy objective, or per-instance regressions hidden by aggregation | C4 |
+| Broader repair improves the plan estimate but worsens execution | Inconsistent handoff state, a mismatched replacement rule, or side effects of changing scope | C5 |
+| The same candidates get priority while later ones receive few visits | Traversal omissions, budget truncation, or an unsuitable coverage policy | C6 |
 
-If no case fits, formulate a new hypothesis from failure evidence in the current project; do not force a match. After choosing a case, use the [experiment card](experiment-card.md) to record which conditions are similar, which differ, and what result would invalidate the reason for drawing on it.
+Modification locations below identify conceptual responsibilities. The agent locates the corresponding functions and call chains in **the current user's source**, without finding or transplanting the original author's implementation. Check existing records first, then use one local smoke check that distinguishes the key branches. Act on evidence instead of stopping at an experiment plan. Record decisions in the [experiment card](experiment-card.md); follow the [autonomous workflow](autonomous-research.md) for escalation. Broaden validation only when local results cannot settle adoption and another check could change that decision. Large A/B runs are not the default.
 
-## C1: Relaxed acceptance changed the exploration, but did not improve the result
+## C1: Relaxed acceptance changed exploration but did not improve the result
 
-**Attempt and rationale.** As search improvements became less frequent, two acceptance rules were tried: allowing sideways moves at equal cost, and using historical costs to accept some temporarily worse candidates. The rationale was that accepting only strict improvements might block paths to better regions of the search space.
+**Real history.** As improvements slowed, equal-cost sideways moves and historical-cost acceptance of some temporarily worse candidates were tried: strict improvement might block better regions. Under a fixed workload, the equal-cost version tied final cost and took longer. The historical-cost version did make sideways moves, accept uphill moves, and update the best solution, yet its returned best result was worse than the control. Neither candidate was integrated; the validated strict-improvement process was retained.
 
-**Actual observations.** In screening with a fixed workload, the equal-cost version tied the final cost while adding runtime. Records for the historical-cost acceptance version showed that sideways moves, uphill acceptances, and updates to the best solution all occurred. Nevertheless, the best result it returned was worse than the control. More search activity did not mean a better solution.
+**Evidence limits.** Notes and structured comparisons support those observations, but do not identify the cause among acceptance rules, neighborhoods, budgets, or instance structure. They do not rule out other methods that allow temporary deterioration.
 
-**Action taken at the time.** These candidates were not integrated. The previously validated process that accepted strict improvements was retained.
+**Trigger → verify first.** When search stalls or acceptances surge, inspect distinct visited states, acceptance types, the best-solution history, and the return value. Distinguish failure to find a better solution from failure to retain one.
 
-**Evidence and limits.** Experiment notes and structured comparison results support these observations. They do not determine whether the failure came from the acceptance rule, neighborhood, budget, or instance structure. Nor do they rule out other search methods that allow temporary deterioration.
+**Evidence → modification and action.**
 
-**What to test now.** If your project also encounters a plateau, first record acceptance types, visits to distinct states, the history of the best solution, and the final return value. Then compare both fixed workloads and comparable time budgets. If only the acceptance count rises, without improving the best solution, reject that candidate. If better states are found but not returned, repair the logic that retains the best solution before tuning how permissive acceptance should be.
+- A better solution was found but not returned: fix best-solution storage, restoration, or return handling; defer relaxing acceptance.
+- Visits repeat the same states: inspect candidate generation, deduplication, and neighborhood selection. Make a local change where evidence identifies the repetition; a plateau alone does not establish overly strict acceptance.
+- New states are explored but the best result does not benefit: keep the validated version and disable this candidate. More acceptances alone do not justify more effort.
 
-**When to reconsider.** Evidence shows that the current neighborhood requires crossing a plateau, that states lack diversity, or that the budget and instance structure have changed. A new experiment should address those new conditions, rather than rely only on the hope that another adjustment might work.
+**Minimum check and stop/restart.** Run briefly from one relevant saved state; check visits, the best-solution record, and the returned value. End the round once the fix covers the known error. Add a relevant comparison under comparable resources only if retention still depends on benefit. Reopen when plateau structure, insufficient diversity, or changed budgets/instances provide new evidence, rather than merely hoping another adjustment will work.
 
-## C2: Joint search helped weak starting points but added little to a mature baseline
+## C2: Useful joint search need not justify an extra stage after a mature baseline
 
-**Attempt and rationale.** Waiting and rerouting choices were searched jointly for small groups of interacting trains. Broader and related groups were also tried later. The idea was that coordinating interdependent decisions might find improvements that incremental adjustments could miss.
+**Real history.** Waiting and rerouting were searched jointly for small groups of interacting trains, later including broader and related groups, to coordinate decisions difficult to adjust incrementally. Small-graph results matched an independent joint shortest-path comparison. Most screened cases improved from weak initial plans; after a thoroughly optimized baseline, directly comparable cases showed only occasional tiny gains, with the rest tied. The method remained a research candidate. Saved mature complete plans supported checks of broader or related groups without repeatedly rerunning the expensive baseline. Later screening still mainly found small gains, which did not justify added submission complexity.
 
-**Actual observations.** Results on small graphs matched an independent joint shortest-path comparison. Most screened cases improved when starting from weaker initial plans. After a thoroughly optimized, mature baseline, however, the directly comparable cases showed only occasional tiny gains; the rest tied. These answer two different questions: whether the method can find an improvement, and whether it is worth adding to the current system.
+**Evidence limits.** Small-graph comparisons, screening results, and notes support the differences. Agreement on small graphs proves no large-instance optimality. The explanation that the mature baseline had already handled the relevant structures remains unverified.
 
-**Action taken at the time.** The method remained a research candidate. Broader or related groups were investigated using saved, mature, complete plans, avoiding an expensive rerun of the baseline each time. Later screening still mostly yielded small gains, which did not justify adding complexity to the submission.
+**Trigger → verify first.** When a new stage adds little to the full system, check starting plans, resource conditions, and whether the stage actually runs. Then inspect failure trajectories for joint constraints it could still address.
 
-**Evidence and limits.** Small-graph comparison records, screening results, and research notes support these differences. Agreement on small graphs does not prove optimality on large instances. Whether the mature baseline had already resolved the structures this method handles well remains an unverified explanation.
+**Evidence → modification and action.**
 
-**What to test now.** Run both a continuation of the baseline and the candidate from the same saved plan, comparing resources and additional gains. If the method helps only from a weak starting point, formulate a separate hypothesis about using it to replace earlier work. Do not use gains from a weak starting point to justify appending a stage at the end. Without enough marginal benefit, retain the current best version.
+- Starts differ or the stage does not run: fix saved-plan loading, stage integration, or result recording before broadening joint search.
+- Benefits occur only from weak starts: do not append the stage to the mature pipeline. If early work is a demonstrated bottleneck, assess replacing it at the stage-scheduling boundary.
+- A reproducible remaining interaction is absent from the current group or boundary: locate group selection and joint-search boundaries and modify them for that interaction. Without such evidence and sufficient marginal benefit, keep the current version.
 
-**When to reconsider.** The baseline differs, early convergence is the main bottleneck, or trajectories reveal joint constraints that the current method repeatedly fails to resolve.
+**Minimum check and stop/restart.** Use the same relevant saved plan to check stage invocation and the local result for one remaining interaction. Compare baseline continuation with the candidate's resources and gains only if additional value determines the decision. Stop appending stages without enough marginal value. Reopen when the baseline changes, early convergence becomes a bottleneck, or new trajectories expose unhandled joint constraints.
 
-## C3: Maintain reservations incrementally, and check tested behavior before claiming a speedup
+## C3: Incremental reservation maintenance needs matching behavior before speed matters
 
-**Attempt and rationale.** Local search repeatedly reads and updates path occupancy information. The attempt removed and rebuilt reservations only for affected paths, reusing the rest to reduce repeated construction work. Challenges included shared occupancy, restoring state after undoing a change, and maintaining consistent state after an exception.
+**Real history.** To reduce repeated reservation construction during local search, only affected paths' reservations were removed and rebuilt; the rest were reused. Challenges included shared occupancy, restoration after undo, and exceptions. Table-level comparisons and exception rollback checks passed. With fixed optimizer rounds, complete paths, costs, random states, and acceptance histories matched, while the candidate took less time. It was retained, followed by complete execution regressions at different scales, checking implementation efficiency separately from execution benefits.
 
-**Actual observations.** Table-level comparisons and exception rollback checks passed. In optimizer comparisons with a fixed number of rounds, the candidate and baseline produced identical complete paths, costs, random states, and acceptance histories, while the candidate took less time. This provided finer behavioral evidence than matching only the final number of completed tasks.
+**Evidence limits.** Structured reservation-state and optimizer comparisons exist, but the candidate included related efficiency changes: the whole optimizer speedup cannot be attributed to one change. Table-level timing supports narrower attribution. Limited agreement is no formal equivalence proof and does not guarantee a faster episode.
 
-**Action taken at the time.** The candidate was retained and followed by complete execution regressions at different scales. Implementation efficiency and final execution benefits were checked separately.
+**Trigger → verify first.** If maintenance appears expensive, inspect profiling or local timing to establish whether rebuilding is a major cost. Check the semantics of updates, shared occupancy, and restoration.
 
-**Evidence and limits.** Structured reservation-state checks and optimizer behavior comparisons are available. The candidate also contained related efficiency changes, so the entire optimizer-level speedup cannot be attributed to one change. Table-level timing supports attribution over a narrower scope. Agreement in a limited set of tests is not a formal proof of equivalence for all inputs, and does not imply that a whole episode must run faster.
+**Evidence → modification and action.**
 
-**What to test now.** If your bottleneck is similar, first check whether repeated work accounts for a substantial share of the cost. Use differential checks for normal updates, overlapping occupancy, rejected candidates, and recovery from exceptions. Locate any behavioral differences first. Once behavior matches, measure throughput under a fixed workload and complete execution under comparable resources separately. Better results in a time-limited run may come from doing more work; they cannot directly establish a stronger search strategy.
+- Most cost lies elsewhere: address the actual hotspot instead of adding incremental-maintenance complexity.
+- State differs after undo, rejection, or an exception: fix reservation ownership, updates, or rollback first; suspend speed claims.
+- Repeated cost is substantial and state semantics are clear: introduce local reuse at reservation construction/update boundaries, preserving tested behavior. Do not change search strategy concurrently to explain the speedup.
 
-**When to continue or abandon the direction.** Continue only if profiling shows that the relevant overhead warrants the effort. Change direction if the bottleneck lies elsewhere or maintenance complexity offsets the benefit.
+**Minimum check and stop/restart.** Locally compare affected normal updates, overlapping occupancy, rejection, and exception recovery. After they pass, check behavior and timing under a small fixed workload. Stop to locate state differences; end this direction if overhead is insignificant or maintenance costs offset the gain. Broaden runs only if episode-level resource/quality decisions remain unresolved. Gains from doing more work within a time limit are efficiency gains. Recheck when hotspots or the state model change.
 
-## C4: More completions and lower aggregate cost still coincided with a worse actual score
+## C4: More completions and lower total cost still coincided with a lower actual score
 
-**Attempt and rationale.** Search effort was increased, and the treatment of task urgency during planning was adjusted. The expectation was that completing more tasks in difficult scenarios, meeting more deadlines, and reducing total cost would also improve final performance.
+**Real history.** Search effort was increased and the treatment of task urgency was adjusted, expecting more completions and on-time arrivals and lower total cost in difficult scenarios to improve performance. Two historical actual-evaluation tables instead showed better aggregates but a lower final score, with clear per-instance regressions. The disagreement also occurred between aggregation levels within comparable actual results. Analysis shifted to individual regressions and failure states, producing targeted repair candidates for further validation; aggregate improvement alone no longer determined submission.
 
-**Actual observations.** Two historical tables of actual evaluation results showed that total completions, on-time completions, and aggregate cost improved, while the final score fell. The per-instance tables contained scenarios with clear regressions. The disagreement was not limited to local estimates versus the server: it also appeared between different levels of aggregation within comparable actual results.
+**Evidence limits.** The user's two original evaluation tables and per-instance records support this observation more directly than a verbal measurement summary. They provide neither the exact scoring formula nor proof that one malfunction was the sole cause.
 
-**Action taken at the time.** Analysis shifted to per-instance regressions and failure states. Targeted repair candidates were proposed for further validation, and aggregate metric improvements alone no longer determined whether to submit a candidate.
+**Trigger → verify first.** When proxies conflict with the actual objective, match code, data, evaluation conditions, and per-instance primary metrics. Inspect aggregation/normalization in the evaluator when accessible; leave inaccessible rules unknown.
 
-**Evidence and limits.** This observation can be checked in the two original evaluation tables and per-instance records supplied by the user, making it more direct than an account based only on a verbal measurement summary. The results themselves do not supply the exact scoring formula or prove that a particular malfunction was the sole cause.
+**Evidence → modification and action.**
 
-**What to test now.** Match each result to its code, data, and evaluation conditions. List changes in the primary metric and constraints for each instance, and verify aggregation or normalization rules. Read the evaluator if the rules are accessible. Otherwise, leave them unknown and use the actual returned metric. Before accepting a candidate, establish where benefits are concentrated and whether regressions affect critical constraints.
+- Versions, instances, or metrics were mismatched: fix result association and evaluation records before changing the planner.
+- The selection criterion optimizes the wrong objective: correct objective calculation/candidate selection using verified rules. If rules are unknown, use actual returned metrics instead of inventing a formula.
+- Results are correctly associated and regressions cluster in a concrete failure: use relevant trajectories to locate and fix the responsible constraint handling or execution path. Do not simply add search effort to pursue better aggregates.
 
-**When to reconsider.** If your actual objective is the aggregate quantity, and you have verified that execution and scoring are consistent, you can use it directly to select a version. This case challenges unverified metric substitution, not all aggregate metrics.
+**Minimum check and stop/restart.** Recheck relevant rows and aggregates in existing tables first; replay one instance explaining the regression only if necessary. End the round after repairing evaluation association or the local failure. Expand validation only if adoption remains unresolved. If the aggregate is the actual objective and execution/scoring agree, use it directly for selection. This case challenges unverified metric substitution, not aggregate metrics generally.
 
-## C5: Computing a broader repair plan and choosing between plans did not prevent regression
+## C5: Broader repair selected by a better estimate can still worsen execution
 
-**Attempt and rationale.** After malfunction repair, an additional rescheduling plan was generated for a broader set of active tasks and compared with the existing plan using a planning-stage quality estimate. The rationale was that broader coordination might remove blocking left by local repair, while accepting only a plan estimated to be better appeared to limit side effects.
+**Real history.** After malfunction repair, an extra rescheduling plan covered more active tasks and was compared with the existing plan using estimated planning quality, hoping to remove blocking left by local repair. Records preserve testing, tighter replacement conditions, retesting, disabling, and deletion. A measurement summary reported higher execution penalties and planning time in a local scenario. The comparison mechanism broadening replacement scope was then removed, restoring protected existing behavior before assessing other candidates.
 
-**Actual observations.** Historical records preserve a sequence of testing, tightening the replacement conditions, testing again, disabling the mechanism, and removing the corresponding logic. A measurement summary from the time reported increased execution penalties and planning time in a local scenario. A better planning estimate was not sufficient evidence of better execution.
+**Evidence limits.** Evidence consists of test invocations, edit/rollback records, and the assistant's measurement summary from the time, without independently checkable raw run output. Other repair behavior changed concurrently, preventing sole attribution to this mechanism. “Oscillation” or “repair scope must match malfunction scope” remain possible explanations.
 
-**Action taken at the time.** The comparison mechanism that broadened the scope of replacement was removed. The protected existing behavior was restored before other candidates were assessed.
+**Trigger → verify first.** When the plan estimate improves but execution worsens, inspect replacement times, before/after estimated costs, actual state, and the first trajectory divergence. Separate scope, acceptance rules, and concurrent changes.
 
-**Evidence and limits.** The evidence consists of test invocations, editing and rollback records, and the assistant's measurement summary at the time. Raw run output that could be independently checked was not retained. Other repair behavior also changed during this period, so the entire difference cannot be attributed solely to this mechanism. “Oscillation” and “the repair scope must match the malfunction scope” are possible explanations, not rules established by this record.
+**Evidence → modification and action.**
 
-**What to test now.** Save the time of each plan replacement, the estimated costs before and after it, and the actual trajectories. Identify the first execution divergence, and separate replacement scope, acceptance rules, and other concurrent changes. Even if a plan looks better, it cannot become the best version when complete execution violates a hard constraint or worsens the primary objective. Untested plans remain candidates; estimates must not overwrite validated results.
+- The new plan conflicts with execution-time state or constraints: fix plan submission, state handoff, or execution validation before broadening rescheduling.
+- Handoff is correct but an estimated improvement harms the primary objective: fix plan comparison/replacement criteria. Restore validated behavior while the cause is unclear; estimates must not overwrite validated results.
+- Local repair leaves a reproducible coordination gap: make a targeted change at affected-task selection and repair boundaries, then check execution. Waiting or plan estimates alone do not establish that broader scope will help.
 
-**When to reconsider.** The current executor differs from the original conditions, there is a reproducible failure of local repair, and controlled comparisons can test the benefit of broader coordination.
+**Minimum check and stop/restart.** Replay one relevant replacement through its first divergence. After the fix, cover that event and the affected execution segment. A hard-constraint failure or primary-objective regression stops candidate promotion. Broaden validation only if adoption still depends on full-episode effects. Reopen when executor conditions change or a local coordination failure allows controlled verification; this is no permanent ban on broad repair.
 
-## C6: Checking later candidates found limited gains and also took more time
+## C6: Visiting later candidates brought limited gains and added time
 
-**Attempt and rationale.** The traversal of candidate starting points during local refinement was changed so that candidates later in the order also had a chance to be checked. The rationale was that a limited search might repeatedly spend resources on a few preferred candidates and miss other regions with potential improvements.
+**Real history.** Local refinement's starting-point traversal was changed so later candidates could be checked, aiming to avoid repeated expenditure on a few preferred items. Behavioral checks recorded traversal with and without improvements. Screening on saved mature plans improved most cases and tied the rest. Paired complete executions slightly lowered aggregate cost, preserved completions and on-time arrivals, and increased runtime; records also preserved changes before and after the added stage. Local screening and complete execution validation were completed. The cited material gives no subsequent actual server performance, so later success is not attributed backward to this direction.
 
-**Actual observations.** Behavioral checks recorded the traversal of starting points both when improvements occurred and when they did not. Screening on saved, mature plans improved most cases and tied the rest. In paired complete executions, aggregate cost fell slightly, completions and on-time arrivals did not regress, and total runtime increased. Records also preserved the changes before and after the added stage.
+**Evidence limits.** Behavioral checks, saved-plan screening, and execution records support limited gains and added time, but do not fully separate extra budget from coverage policy. They do not establish insufficient coverage as the cause of earlier losses. Within-run stage gains, cross-run initial-plan differences, and final execution differences must remain distinct.
 
-**Action taken at the time.** Local screening and complete execution validation were completed. The cited validation materials do not give the subsequent actual server performance; later success is not attributed backward to this direction.
+**Trigger → verify first.** If visits seem concentrated near the start, inspect the actual visit distribution, exit reasons, and runtime. Distinguish traversal defects from deliberate tradeoffs within a budget; iteration counts alone are insufficient.
 
-**Evidence and limits.** Behavioral checks, screening on saved plans, and complete execution records support the limited gains and added time cost. They have not fully separated the causal contributions of extra computation and the coverage policy, so they do not establish that insufficient coverage caused the earlier version's losses. Gains within one stage of a single run, initial-plan differences across runs, and differences in final execution must also remain distinct.
+**Evidence → modification and action.**
 
-**What to test now.** Record the distribution of candidates actually visited, rather than counting only total iterations. If coverage is insufficient, compare different traversal policies under the same budget, and test an increased budget as a separate control. If the gain comes only from more time, report it as a tradeoff of resources for quality. If the coverage policy remains effective under comparable resources, then investigate the mechanism.
+- Unexpected early exits, cursor resets, or omissions occur: fix candidate traversal/termination, initially preserving the budget.
+- Traversal is correct but trajectories reveal relevant opportunities in unvisited regions: make a small change to candidate ordering or budget allocation and check benefit within current resources.
+- Coverage is adequate, or gains require more time: do not attribute the cause to coverage. Stop this candidate if resource limits exclude it; otherwise report the resource-for-quality tradeoff.
 
-**When to reconsider or abandon the direction.** Recheck when the candidate set, budget, or bottleneck changes. Under a tight resource limit, extra runtime may make a candidate unsuitable for retention despite a local gain.
+**Minimum check and stop/restart.** From one relevant saved state, inspect visits and exits with and without improvement. Stop when the fix settles the choice. Add equal-budget traversal comparisons or a separate budget control only if distinguishing coverage from extra computation affects adoption. Recheck when the candidate set, budget, or hotspot changes.
 
-## Use a case to guide the next round, rather than retracing it
+## Make the decision concrete
 
-Each round, choose only a case that helps the current decision and turn its question into an executable check. Accept or reject the current implementation under the tested conditions, not an entire algorithm family. Update the judgment if new evidence overturns it.
+Record “current evidence → judgment → located responsibility/function in the user's source → change or retain → minimum check → result.” If evidence is insufficient, run a check that distinguishes causes; if sufficient, fix the relevant location. Form a new hypothesis when no case fits. Do not turn failures under current conditions into algorithm-family prohibitions.
 
-After reaching the goal, preserve the successful version, failed attempts, and unknowns. Reaching a goal does not prove that every retained component was necessary. Nor must every alternative be exhausted before observed progress can be acknowledged. Whether research continues should depend on the current goal, evidence, and budget.
-
-New cases should have a real basis or be clearly labeled as fictional. Separate actual actions from suggested experiments, and check whether several cases together could expose the source solution's distinctive combination. In interactive mode, a key question from a case can be offered to the user to think through. In autonomous mode, the agent investigates, implements, evaluates, and records the decision.
+After reaching the goal, preserve the successful version, failed attempts, and unknowns without exhausting alternatives. Success does not prove every module necessary. New cases need real evidence or a fictional label, separation of actual actions from recommendations, and a check for disclosure through combined cases. Interactive mode can discuss one key judgment; autonomous mode has the agent diagnose, modify, and validate.

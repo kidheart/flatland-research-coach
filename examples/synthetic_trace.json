@@ -1,0 +1,23 @@
+{
+  "schema": "rail-trace/v1",
+  "synthetic": true,
+  "description": "Invented diagnostic records; conflicts are intentional, not a feasible solver trajectory.",
+  "semantics": {"agent_model": "point", "vertex": "exclusive", "edge_swap": "forbidden"},
+  "frames": [
+    {"tick": 0, "agents": [
+      {"id": "A", "position": [0, 0], "direction": 1, "occupies": true, "planned": {"position": [0, 0]}},
+      {"id": "B", "position": [0, 1], "direction": 3, "occupies": true},
+      {"id": "slow", "position": [1, 0], "direction": 1, "occupies": true}
+    ]},
+    {"tick": 1, "agents": [
+      {"id": "A", "position": [0, 1], "direction": 1, "occupies": true, "planned": {"position": [0, 0]}, "blocked_by": ["B"], "release_tick": 2},
+      {"id": "B", "position": [0, 0], "direction": 3, "occupies": true, "blocked_by": ["A"], "malfunction": {"visibility": "unknown"}},
+      {"id": "slow", "position": [1, 0], "direction": 1, "occupies": true}
+    ]},
+    {"tick": 3, "agents": [
+      {"id": "A", "position": [0, 2], "occupies": true, "blocked_by": ["unrecorded"]},
+      {"id": "B", "position": [0, 2], "occupies": true},
+      {"id": "partial", "planned": {"position": [2, 0]}}
+    ]}
+  ]
+}

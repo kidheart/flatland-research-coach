@@ -1,8 +1,8 @@
-# Autonomous research: advance optimization through experiments
+# After diagnosis: implement, confirm, and stop
 
 [简体中文](../autonomous-research.md) | **English**
 
-Use this workflow on the user's own Flatland project. Questions are handled within research and review; the user need not answer a quiz each round. Proceed with work already determined and authorized. Ask the user only about critical missing facts that affect the objective, cost, or scope and cannot be inferred from available material.
+Use this after the [diagnosis guide](diagnosis.md) identifies an evidence-supported problem and a next decision. If the fault is already located, proceed directly to a local repair; if a critical observation is missing, collect it first. The user need not answer a quiz each round. Ask only about critical facts that cannot be established from available material and affect progress.
 
 ## Establish the bounds
 
@@ -27,11 +27,11 @@ Do not default to batch A/B tests, exhaustive parameter searches, seed sweeps, f
 
 Smoke checks can support “the tested path works” or “this failure is fixed,” not “the system is faster” or “the score improved.” Preserve the usable candidate separately from the best version with verified performance. Missing performance evidence need not block a specifically validated repair, but cannot upgrade the performance claim. Without a new change, failure, or explicit unresolved question, do not repeat checks.
 
-## Use real cases to choose an investigation
+## The decision to establish before editing
 
-Use the index in [anonymized reasoning cases](reasoning-cases.md) to locate a relevant section, without reading every case or both languages. Briefly note matching conditions, key differences, and a check that could change the decision. Choose suggested comparisons through the escalation conditions above; they are not automatic experiment tasks or components to install together.
+Map the diagnosis to a file/function in the user's project. Explain its connection to the objective, the judgment supported by evidence, and the change expected in the smallest check. Do not manufacture competing hypotheses for a directly located simple bug. For an unconfirmed mechanism, state which observation could refute it.
 
-For example, compare a candidate with the current mature baseline if its benefits were seen only on weak initial plans. Investigate scoring and per-case changes if internal aggregates and actual evaluations rank versions differently. Separate equal-workload comparisons from time-limited full execution when investigating implementation speedups. These branches come from specific experience; consult the observations and limits in each case.
+When experience helps, read only a relevant [decision card](reasoning-cases.md). Its evidence branches guide where to inspect or whether to change direction; they do not supply code. If clock, occupancy, or blocking semantics are missing, establish the mapping first. Unreliable diagnostic output must not drive solver changes.
 
 ## Divide work when useful; agreement is not evidence
 
@@ -49,12 +49,12 @@ Avoid running baseline and candidate timing experiments concurrently when they c
 
 ## The autonomous loop
 
-1. **Anchor the baseline.** Reuse verifiable results and existing identifiers, adding a relevant small check only when needed. Do not rerun the baseline by default or treat the newest file as the best version automatically.
-2. **Form a candidate.** Briefly state the problem, change, and expected observable result. Add competing explanations for mechanism research; do not invent another explanation for a directly identified bug.
-3. **Choose the smallest check.** State what result could change acceptance. Use existing evidence, targeted smoke checks, or a justified focused comparison, following the escalation conditions.
-4. **Implement and check.** Make the smallest reasonable change, run the selected checks, and record actual completion, failure, or timeout. Passing smoke checks does not automatically trigger full evaluation.
-5. **Accept or reject.** Apply the acceptance criteria and hard constraints. Distinguish a verified repair, unconfirmed performance, and a verified performance gain; promote only claims supported by the appropriate evidence. Revert only this round's rejected changes and retain a brief failure record.
-6. **Decide whether continuing is worthwhile.** The next check needs a concrete unresolved question, an outcome that could change the decision, and a worthwhile cost. Otherwise save state and stop. Remaining budget is not a reason to find more tests, and one gain does not automatically abandon a still-worthwhile agreed objective.
+1. **Preserve the starting point.** Retain a recoverable version and valid existing results. Do not rerun the baseline by default or treat the newest file as the best version automatically.
+2. **Receive the diagnosis.** Connect the problem and evidence to the user's function. With insufficient diagnosis, the current candidate is an observation change, not a speculative algorithm change.
+3. **Define confirmation.** State how the original failure should change and which related behavior must remain valid. Use a native small reproduction, or the [tool protocol](tooling.md) to extract a segment, check events, and replay through a project adapter. A slice alone is not execution.
+4. **Implement and check.** Change the located decision or implementation, run the selected check, and record actual completion, failure, or timeout. On failure, revisit the diagnosis rather than automatically expanding search or a test matrix.
+5. **Accept or reject.** Apply acceptance criteria and hard constraints, distinguishing a verified repair, unconfirmed performance, and a verified performance gain. Revert only this round's rejected changes; promote only claims supported by appropriate evidence.
+6. **Update the diagnosis or stop.** Feed results back into the selected branch and record excluded explanations and reconsideration conditions. Continue only for a decision-changing check worth its cost, not because budget remains.
 
 Use the short record in the [experiment card](experiment-card.md) or existing logs; expand fields only as needed for mechanism or performance research. Keep the version, check results, and acceptance rationale without producing long reports, retelling every case, or repeating raw output for each smoke check. Record the agent's own judgment rather than the user's supposed opinion, and distinguish proposed, implemented, started, completed, and verified work.
 
@@ -64,4 +64,4 @@ When a comparison is needed, control inputs, versions, and relevant randomness, 
 
 Save state and stop the affected work when evidence confirms the objective, the budget is exhausted, no next check can change the decision at a worthwhile cost, or critical input, tools, or permissions are missing. Without execution tools, provide analysis and a transferable experiment contract, label it not run, and do not claim completed autonomous optimization. Do not claim continued background work after the host stops execution; persistent execution requires host support.
 
-Deliver the best version and recoverable location, actual comparison with the baseline, candidate decisions, runtime and failures, unresolved questions, and the stopping reason. Local evidence supports local conclusions, not inferred competition scores or global optimality. An unsuccessful optimization effort should still leave justified exclusions and a preserved reliable baseline.
+Deliver the problem location, evidence, change rationale, actual checks, and unproven claims, with recoverable candidate/best-version locations and the stopping reason. State when performance comparisons were not run; local diagnosis does not establish competition scores or global optimality. Even without an improvement, preserve justified updates and a reliable baseline rather than treating a tested negative result as a permanent ban on a method family.

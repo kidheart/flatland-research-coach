@@ -1,0 +1,20 @@
+{
+  "schema": "rail-replay/v1",
+  "synthetic": true,
+  "description": "Invented tiny line railway demonstrating checkpoint plus action replay. Not Flatland.",
+  "clock": {"start_tick": 0, "action_timing": "before_step"},
+  "runner_requirements": {"engine": "synthetic-line/v1"},
+  "checkpoint": {
+    "tick": 0,
+    "track_length": 5,
+    "agents": [
+      {"id": "slow", "cell": 0, "direction": 1, "move_period": 2, "phase": 0, "malfunction_remaining": 0},
+      {"id": "lead", "cell": 2, "direction": 1, "move_period": 1, "phase": 0, "malfunction_remaining": 1}
+    ]
+  },
+  "actions": [
+    {"tick": 0, "commands": {"slow": "go", "lead": "go"}},
+    {"tick": 1, "commands": {"slow": "go", "lead": "go"}},
+    {"tick": 2, "commands": {"slow": "go", "lead": "hold"}}
+  ]
+}

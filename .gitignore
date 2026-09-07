@@ -1,4 +1,4 @@
-# Keep local experiments and editor files out of the teaching package.
+# Keep local experiments and editor files out of the research package.
 .DS_Store
 Thumbs.db
 .vscode/
@@ -20,3 +20,6 @@ results/
 *.pickle
 *.npy
 *.npz
+/trace-slice.json
+/replay-trace.json
+/replay-report.json

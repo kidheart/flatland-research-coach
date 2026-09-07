@@ -7,9 +7,9 @@ Reuse an existing tracking system rather than creating extra forms. Default smal
 ## Default short record
 
 ```text
-Change and actual version:
-Relevant checks / reused evidence → actual results, including failures or timeouts:
-Acceptance decision; best-version location; key claims still unconfirmed:
+Problem and evidence: <segment/tick/agent; observation versus explanation>
+Change location and rationale: <user file/function/version, or the missing observation>
+Verification and retention: <check and actual result; candidate/best locations; unknowns and next step>
 ```
 
 Passing a smoke check does not establish a performance gain; performance claims require relevant, comparable measurements. When retaining a candidate, also preserve the previously verified best version. A candidate with insufficient evidence does not automatically become the new best version. A budget is a ceiling, not a spending target. Expand checks or use the longer card only for a specific unresolved question whose result would change the next decision.

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="560" viewBox="0 0 1440 560" role="img" aria-labelledby="title desc">
   <title id="title">Flatland Research Loop</title>
-  <desc id="desc">Real cases. Tested improvements. An autonomous research route connects observation, hypothesis, experiment and revision.</desc>
+  <desc id="desc">Understand the failure. Choose the change. A research route connects trace evidence, diagnosis, a focused change and verification.</desc>
   <rect width="1440" height="560" rx="28" fill="#f5f3e9"/>
   <g fill="none" stroke="#dedfd1" stroke-width="1">
     <path d="M920 0V560M1000 0V560M1080 0V560M1160 0V560M1240 0V560M1320 0V560M1400 0V560"/>
@@ -9,9 +9,9 @@
   <g font-family="Arial, Helvetica, sans-serif">
     <rect x="64" y="56" width="320" height="36" rx="18" fill="#173f37"/>
     <text x="84" y="80" fill="#ffffff" font-size="15" font-weight="700" letter-spacing="2">FLATLAND RESEARCH LOOP</text>
-    <text x="64" y="184" fill="#173f37" font-size="62" font-weight="700" letter-spacing="-2">Real cases.</text>
-    <text x="64" y="255" fill="#173f37" font-size="62" font-weight="700" letter-spacing="-2">Tested improvements.</text>
-    <text x="68" y="307" fill="#5a6a5d" font-size="21">Autonomous experiments for your own planning project.</text>
+    <text x="64" y="184" fill="#173f37" font-size="62" font-weight="700" letter-spacing="-2">Understand the failure.</text>
+    <text x="64" y="255" fill="#173f37" font-size="62" font-weight="700" letter-spacing="-2">Choose the change.</text>
+    <text x="68" y="307" fill="#5a6a5d" font-size="21">Trace evidence. Make a focused change. Verify it.</text>
     <g fill="none" stroke-linecap="round" stroke-linejoin="round">
       <path d="M94 412H700C790 412 790 160 888 160H1360" stroke="#d9dfd0" stroke-width="22"/>
       <path d="M94 412H700C790 412 790 160 888 160H1360" stroke="#173f37" stroke-width="3"/>
@@ -26,10 +26,10 @@
       <circle cx="1026" cy="160" r="10"/><circle cx="1166" cy="322" r="10"/>
     </g>
     <g fill="#173f37" font-size="17" font-weight="700">
-      <text x="68" y="461">OBSERVE</text><text x="252" y="461">HYPOTHESIZE</text>
-      <text x="458" y="461">EXPERIMENT</text><text x="672" y="461">REVISE</text>
+      <text x="68" y="461">TRACE</text><text x="262" y="461">DIAGNOSE</text>
+      <text x="468" y="461">CHANGE</text><text x="672" y="461">VERIFY</text>
     </g>
     <g fill="#c97c44"><circle cx="1360" cy="160" r="9"/><circle cx="1360" cy="322" r="9"/><circle cx="1360" cy="440" r="9"/></g>
-    <text x="68" y="515" fill="#6c7668" font-size="14" letter-spacing="1">REAL CASES / BOUNDED EXPERIMENTS / VERIFIED RESULTS</text>
+    <text x="68" y="515" fill="#6c7668" font-size="14" letter-spacing="1">REAL CASES / TRACE TOOLS / TARGETED VERIFICATION</text>
   </g>
 </svg>

@@ -1,4 +1,4 @@
 interface:
   display_name: "Flatland Research Loop"
-  short_description: "基于真实脱敏案例自动提出假设、协作审查并验证Flatland优化"
-  default_prompt: "使用 $flatland-research-loop，根据我的项目、目标和预算开展自动研究，基于实际实验迭代优化；我要求学习时再切换为交互教练。"
+  short_description: "从轨迹诊断Flatland损失，用真实案例选择改动并做针对性验证"
+  default_prompt: "使用 $flatland-research-loop，先根据我的代码、规则和轨迹诊断问题，再说明修改位置与理由，用最小必要检查验证，并在目标和预算内推进。"

@@ -1,0 +1,20 @@
+{
+  "schema": "rail-reservations/v1",
+  "synthetic": true,
+  "description": "Invented reference-count and rollback audit, with intentional invalid release, overlap, and snapshot mismatch.",
+  "interval": "half-open",
+  "events": [
+    {"op": "reserve", "owner": "A", "resource": "cell:0,1", "start": 0, "end": 2},
+    {"op": "reserve", "owner": "A", "resource": "cell:0,1", "start": 0, "end": 2},
+    {"op": "checkpoint", "name": "two_refs"},
+    {"op": "release", "owner": "A", "resource": "cell:0,1", "start": 0, "end": 2},
+    {"op": "observed", "entries": [{"owner": "A", "resource": "cell:0,1", "start": 0, "end": 2, "count": 1}]},
+    {"op": "reserve", "owner": "B", "resource": "cell:0,1", "start": 2, "end": 3},
+    {"op": "reserve", "owner": "C", "resource": "cell:0,1", "start": 1, "end": 3},
+    {"op": "release", "owner": "nobody", "resource": "cell:0,1", "start": 0, "end": 2},
+    {"op": "rollback", "name": "two_refs"},
+    {"op": "observed", "entries": [{"owner": "A", "resource": "cell:0,1", "start": 0, "end": 2, "count": 2}]},
+    {"op": "release", "owner": "A", "resource": "cell:0,1", "start": 0, "end": 2},
+    {"op": "observed", "entries": [{"owner": "A", "resource": "cell:0,1", "start": 0, "end": 2, "count": 2}]}
+  ]
+}
