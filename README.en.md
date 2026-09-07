@@ -4,9 +4,11 @@
 
 # Flatland Research Coach
 
-**Develop your own research judgment from your own evidence.**
+**Evidence-guided Flatland Optimization**
 
-An **agent-agnostic Markdown coaching skill** for experiments in **Flatland and railway multi-agent planning**. Through a few questions at a time, it helps you explain observations, form testable hypotheses, design controlled experiments, and state the conditions under which your conclusions hold. It includes anonymized reasoning cases, a question and hint bank, and an experiment card to use when helpful.
+An **autonomous Flatland optimization workflow informed by anonymized cases from real experiments**, delivered as an agent-agnostic Markdown skill. Starting from your existing project, an agent reviews evidence, proposes changes, runs evaluations, and preserves the best verified version within defined objectives, constraints, and budgets. Interactive coaching is an optional mode for explicit requests to learn or work through questions.
+
+The repository and skill retain the name `flatland-research-coach`, so existing links and installation instructions remain usable.
 
 The general way to use it is to give an agent the Markdown instructions to read. You can use local files with an agent that supports file access, or upload or paste the text into a chat tool. Automatic discovery, installation, and persistence depend on the host platform; this repository does not assume every agent recognizes a skill format automatically.
 
@@ -14,49 +16,47 @@ This is a portable way to provide guidance, not a claim that every model or agen
 
 ## When to use it
 
-- You have results but cannot explain what caused an improvement.
+- You have an existing project and want an agent to optimize it within a defined budget and constraints while preserving the best verified version.
+- You have results and need to identify what caused an improvement or regression.
 - A plan looks reasonable, yet execution stalls, arrives late, or needs repeated repairs.
 - A new method helps from a simple starting point but adds little to the complete system.
 - Internal metrics, full execution results, and the final evaluation do not agree.
 - You want to review a research effort: which judgments have evidence, which remain hypotheses, and whether another experiment is worth the investment.
 
-Bring your own code, logs, evaluation rules, or a specific question. If you have no experiment materials yet, you can start with a clearly labeled fictional example. The coach uses the information you have already provided before asking one or two questions that matter most for the next step.
+Provide your own code, logs, evaluation rules, objective, and resource budget. The agent reads existing materials first, reuses verifiable historical results, and addresses only critical missing information that affects effective progress.
 
-## How a round of reasoning works
+## Default workflow: autonomous optimization
 
-**Observe → Distinguish explanations → Design an experiment → Interpret results → Update your judgment**
+An existing project or a clear request for optimization, implementation, or experiments defaults to autonomous research. The agent proceeds directly to reviewing evidence and running bounded experiments. Interactive coaching is used only when you explicitly ask to learn, practice judgment, or work through questions.
 
-| Stage | What to clarify |
-| --- | --- |
-| Observe | What actually happened? Where did it first depart from your expectations? |
-| Distinguish explanations | What different causes could produce this observation? What evidence would distinguish them? |
-| Design an experiment | What will you change and hold fixed? What does each explanation predict? |
-| Interpret results | Which claim does the evidence support? What remains possible? What did the change cost? |
-| Update your judgment | Should you keep, revise, or abandon the explanation? Why is the next step worth taking? |
+**Review existing evidence → Propose a hypothesis → Review the experiment → Make a small change → Run and evaluate → Continue, revise, or roll back**
 
-A round of discussion usually leaves you with an evidence-backed judgment, an open question, and an experiment whose purpose you can explain. Reuse existing records; a short experiment may need only a few lines. There is no need to complete a full form every time.
+First establish the objective, hard constraints, evaluation rules, and available resources. Reuse valid existing results, then choose bounded local experiments that address the current question. Tie each result to the version actually tested and record completion, failures, timeouts, and resource use. Roll back the current round's changes if they cause a regression or violate constraints, while preserving the best verified version. Summarize and stop when the objective is verified, the budget is exhausted, or no feasible hypothesis remains worth testing within the remaining budget.
 
-The depth of help adapts to your needs. When you are stuck, the coach narrows the question and offers progressive hints. If you ask for a direct explanation, analysis of your own code, or an authorized experiment, it can proceed directly.
+Within the authorized local scope and budget, the agent can carry out these steps continuously without waiting for a user response or repeated approval each round. It asks only about critical missing information that cannot reasonably be inferred from the available materials and prevents effective progress.
 
-### A fictional exchange
+When the host provides real multi-agent tools, work can be delegated: a researcher proposes ideas, a reviewer challenges hypotheses and comparison designs, and an executor implements changes and measures results. Agents collaborate through actual outputs and evidence. Without delegation tools, a single agent reviews its own work using these responsibilities and states that limitation honestly. A role-play dialogue written by one agent must not be presented as an independent review that actually occurred.
 
-> **This is a fictional teaching example. It does not describe real experiment results or recommend parameter values.**
->
-> **Learner:** I added a step and the plan cost went down, so the final evaluation should improve too.
->
-> **Coach:** Was that cost recorded after planning or after full execution? Does your evaluation rule use it directly?
->
-> **Learner:** Just after planning. Execution still has disruptions, and I have not checked the scoring rule yet.
->
-> **Coach:** So far, the evidence supports an improvement at the planning stage. How would you test whether that benefit survives through execution?
->
-> **Learner:** I would run a controlled comparison from the same inputs through to completion, recording the plans, execution results, and actual resource use separately. Then I would compare them using the verified evaluation rules.
->
-> **Coach:** That helps separate the different stages. What result would make you revise your original judgment?
+This skill supplies a Markdown workflow. The host supplies file access, command execution, evaluation, agent delegation, and the permissions for those capabilities. The skill is not a persistent program and does not guarantee continuous or background execution on any platform. Without execution tools, the agent should state its limitations and unfinished work, and must not present expected results as observed experiments. See the [autonomous research guide](references/en/autonomous-research.md) for the detailed workflow.
+
+## Cases retained from real experiments
+
+The [anonymized experiment cases](references/en/reasoning-cases.md) are organized around **what was tried → what was actually observed → how to choose the next branch**. They retain failures, limited gains, and judgments worth testing further. They do not supply a recipe of winning modules or disclose the original code, parameters, or complete configurations.
+
+| Case direction | Actual observations and evidence limits | What to test in your own project |
+| --- | --- | --- |
+| **C1 · Negative results: equal-cost sideways moves and history-based cost acceptance** | Equal-cost sideways moves produced a tie and took longer. History-based cost acceptance did produce exploration, but the best solution returned was still worse than the control, so it was not integrated. | Record the current and best solutions separately. Compare the final returned result and time under comparable budgets; exploration alone does not establish a benefit. |
+| **C2 · Baseline dependence: joint conflict search for a small group of trains** | Small-map results matched the control, and most weak starting points improved. Marginal gains on the mature baseline were very small; these results did not lead to integration. | Run paired comparisons from both weak starting points and the mature baseline to test whether the candidate adds a capability the current system lacks. |
+| **C3 · Efficiency: incrementally maintaining reservation and occupancy tables** | At fixed work, paths, cost, random state, and acceptance history matched while time decreased. The candidate included related efficiency changes, so the entire gain cannot be attributed to this one change or extrapolated to a full run. | Isolate incremental maintenance, then separately check consistency and efficiency at fixed work, and actual gains over a full run. |
+| **C4 · Metrics: actual evaluation of added search and urgency handling** | After increasing search and urgency handling, the user's two actual evaluation tables showed improved completion counts, on-time counts, and aggregate cost, yet a lower final score. The investigation shifted to individual cases; this does not establish the scoring formula. | Bind each case to its version and evaluation conditions, check the evaluation rules and per-case changes, and leave unverified scoring relationships unresolved. |
+| **C5 · Execution: broader rescheduling after a malfunction, selected by plan quality** | The attempt went through tighter conditions, retesting, and disabling with rollback. The assistant reported higher execution penalties and time. The evidence used here consists of test invocations and measurement summaries rather than raw run output; concurrent changes prevent attribution to a single cause. | Replay your own small cases and record actual execution. Isolate the rescheduling scope from concurrent changes and test whether plan quality predicts execution gains. |
+| **C6 · Coverage: widening the range of candidate starting points** | Saved plans and full execution showed limited improvements, with no decrease in completion or on-time counts, but time increased. The effects of broader coverage and extra budget were not causally separated. | Design separate comparisons controlling budget or work to distinguish the value of coverage from the benefit of additional computation. |
+
+The right column gives directions to test in your current project; it does not add claims about the original experiments. The bounded observations can help select an experiment. Whether they apply to your environment still depends on actual execution and evaluation.
 
 ## Getting the files and loading the guidance
 
-Chinese and English are two editions of the same skill. **Load the edition you prefer; no separate installation is needed for each language.** The repository includes both, and you can ask the coach to respond in the language you use in conversation.
+Chinese and English are two editions of the same skill. **Load the edition you prefer; no separate installation is needed for each language.** The repository includes both, and you can ask the agent to respond in the language you use in conversation.
 
 ### 1. Download to an ordinary folder
 
@@ -83,11 +83,13 @@ You can also download the repository files from [GitHub](https://github.com/kidh
 For an agent that can read local files, replace `<path-to-repository>` with the full path to your downloaded folder, then enter:
 
 ```text
-Read <path-to-repository>/SKILL.en.md and follow its coaching guidance
+Read <path-to-repository>/SKILL.en.md and follow its optimization workflow
 for this conversation. Read relevant files under
 <path-to-repository>/references/en/ when the current question calls for them.
 Use the environment description and experiment records I provide,
-then help me identify the most important uncertainty to investigate.
+and default to autonomous research for an existing project or optimization request,
+respecting the project's constraints and resource budget.
+Switch to interactive coaching only if I explicitly ask to learn or work through questions.
 Respond in English.
 ```
 
@@ -132,7 +134,8 @@ After installation, start a new conversation; restart Codex if it has not discov
 ```text
 Use $flatland-research-coach and respond in English.
 First read the environment description and experiment records I provide,
-then help me investigate my current research question.
+then carry out autonomous research for my project or optimization request
+within the stated constraints and resource budget.
 ```
 
 See [OpenAI's skills documentation](https://learn.chatgpt.com/docs/build-skills) for skill directories and installation guidance. The `agents/openai.yaml` file supplies optional Codex UI metadata and is not required for reading or using the Markdown guidance.
@@ -141,12 +144,48 @@ See [OpenAI's skills documentation](https://learn.chatgpt.com/docs/build-skills)
 
 ## Get started
 
-Choose a prompt that fits your current question and attach relevant materials you have permission to use. In the examples below, `SKILL.en.md` means the file you have made available by giving its full path, uploading it, or pasting its contents.
+After loading the guidance, use the following prompt to start autonomous optimization with project materials you have permission to use. It does not depend on platform-specific invocation syntax. Make the referenced files available through their full paths, uploads, or pasted contents.
+
+**Autonomous optimization: start from your project and actual evidence**
+
+Replace the placeholders with your actual paths and requirements:
+
+```text
+Read <skill-directory>/SKILL.en.md and
+<skill-directory>/references/en/autonomous-research.md, and optimize in autonomous research mode.
+Read <skill-directory>/references/en/reasoning-cases.md as needed to select testable hypotheses from relevant anonymized cases.
+
+My project path: <actual project path>
+Objective: <primary metric to improve and stopping conditions>
+Hard constraints: <correctness, interfaces, permitted scope of changes, and required limits>
+Resource budget: <total time, maximum experiment rounds, compute resources, or API cost limit>
+
+First review the existing code, rules, logs, and verifiable historical results,
+and identify the best verified version so far.
+Within the scope and budget above, propose hypotheses, review experiment designs,
+make bounded small changes, and run necessary checks and actual evaluations.
+Use the evidence to continue, revise, or roll back the current round's changes.
+Preserve the best verified version without waiting for my response or repeated approval each round.
+If real multi-agent tools are available, you may delegate research, review, and execution.
+Otherwise, review your own work and state that there was no independent agent review.
+Ask only about critical missing information that cannot reasonably be inferred
+from the available materials and prevents effective progress.
+Report the best version, actual results, failures or timeouts, resource use,
+and the limits of the evidence. Clearly identify anything that was not run.
+Stop when a stopping condition or budget limit is reached.
+```
+
+## Optional: interactive coaching
+
+Use this mode only when you explicitly want to learn or work through questions. The coach asks one or two questions about the key uncertainty at a time, then uses your answers to offer progressive hints and design an experiment together. Without project materials, you can use a clearly labeled fictional example; this exercise does not count as actual optimization or evaluation.
+
+<details>
+<summary>Expand learning prompts and a fictional exchange</summary>
 
 **Start with a research question**
 
 ```text
-Read SKILL.en.md and follow its coaching guidance.
+Read SKILL.en.md and use interactive coaching mode.
 First read the environment description and experiment records I provide,
 then restate the facts you already know.
 Ask one or two questions at a time about the most important uncertainty.
@@ -156,7 +195,7 @@ Help me form a hypothesis that could be disproved and design the next experiment
 **Trace a mismatch between planning and execution**
 
 ```text
-Read SKILL.en.md and follow its coaching guidance.
+Read SKILL.en.md and use interactive coaching mode.
 I have provided my planned trajectory, actual trajectory, and action interface description.
 First identify the earliest divergence and separate known facts from possible explanations.
 Then help me design a small check to locate the cause.
@@ -165,7 +204,7 @@ Then help me design a small check to locate the cause.
 **Assess what an improvement actually shows**
 
 ```text
-Read SKILL.en.md and follow its coaching guidance.
+Read SKILL.en.md and use interactive coaching mode.
 Review the before-and-after experiments I provide.
 Did they start from comparable conditions? What resources did they use?
 How much work actually finished? Were failures and timeouts included in the statistics?
@@ -176,21 +215,40 @@ and state the limits of the evidence.
 **Explore an idea before running experiments**
 
 ```text
-Read SKILL.en.md and follow its coaching guidance.
+Read SKILL.en.md and use interactive coaching mode.
 I do not have run data yet. Use a small railway example clearly labeled as fictional
 to help me practice separating observations from explanations
 and designing an experiment that can distinguish two explanations.
 Let me state my judgment first; give progressive hints when I get stuck.
 ```
 
+### A fictional exchange
+
+> **This demonstrates optional interactive coaching only. It is a fictional teaching example and does not describe real experiment results or recommend parameter values.**
+>
+> **Learner:** I added a step and the plan cost went down, so the final evaluation should improve too.
+>
+> **Coach:** Was that cost recorded after planning or after full execution? Does your evaluation rule use it directly?
+>
+> **Learner:** Just after planning. Execution still has disruptions, and I have not checked the scoring rule yet.
+>
+> **Coach:** So far, the evidence supports an improvement at the planning stage. How would you test whether that benefit survives through execution?
+>
+> **Learner:** I would run a controlled comparison from the same inputs through to completion, recording the plans, execution results, and actual resource use separately. Then I would compare them using the verified evaluation rules.
+>
+> **Coach:** That helps separate the different stages. What result would make you revise your original judgment?
+
+</details>
+
 ## Contents
 
 | File | Purpose |
 | --- | --- |
-| [SKILL.en.md](SKILL.en.md) | English coach instructions: the dialogue process, depth of help, judgment standards, and material boundaries. |
+| [SKILL.en.md](SKILL.en.md) | English research guidance: mode selection, workflows, judgment standards, and material boundaries. |
+| [Autonomous research guide](references/en/autonomous-research.md) | Bounded experiment cycles, agent responsibilities, actual evaluations, and preserving the best version. |
 | [Question and hint bank](references/en/question-bank.md) | Choose questions about objectives, interfaces, experiments, generalization, and interpreting results. |
 | [Experiment card](references/en/experiment-card.md) | Record predictions, actual results, conditions that would challenge a hypothesis, and next steps. |
-| [Anonymized reasoning cases](references/en/reasoning-cases.md) | Explore how qualitative observations change judgments and what new evidence could overturn them. |
+| [Anonymized experiment cases](references/en/reasoning-cases.md) | Attempts, actual observations, bounded conclusions, and next branches drawn from real records. |
 | [agents/openai.yaml](agents/openai.yaml) | Optional Codex-specific UI metadata: display name, description, and default prompt. Not a requirement for using the Markdown guidance. |
 | [LICENSE](LICENSE) | The repository's license terms. |
 
@@ -202,7 +260,7 @@ The anonymized cases preserve qualitative observations and reasoning. The underl
 
 Feasibility, meeting a defined objective, achieving a favorable evaluation, and theoretical optimality each require appropriate evidence. Local checks, local results, and full evaluations also support conclusions of different scope. This project does not promise a particular score, a perfect score, or optimality across all environments.
 
-The repository does not include the source project's code, exact configurations, parameters, per-case scores, or implementation details that could reconstruct its solution. The coach uses materials that the current user provides or authorizes it to access, together with public sources. It does not proactively recover the source solution from past conversations or private projects.
+The repository does not include the source project's code, exact configurations, parameters, per-case scores, or implementation details that could reconstruct its solution. The agent uses materials that the current user provides or authorizes it to access, together with public sources. It does not proactively recover the source solution from past conversations or private projects.
 
 If your explanation has stronger evidence, the judgments in the cases should be revised or overturned. Once you have verified the objective you defined, you can record the applicable conditions and remaining unknowns, then conclude that round of research.
 

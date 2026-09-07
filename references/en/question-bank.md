@@ -2,7 +2,7 @@
 
 # Question and Hint Bank
 
-Select this coaching material according to the problem. It is not a fixed questionnaire, and there is no hidden “full-score answer.” Choose only the one or two questions that best distinguish the possibilities in the current round. First reduce the questions using information the user has already provided, then consider what to ask next.
+Select material according to the current problem; there is no fixed questionnaire or hidden “full-score answer.” In autonomous mode, use these questions as internal research and review prompts: inspect evidence, design checks, and run them. Do not stop for user answers just because a prompt is phrased as a question. The guidance below for stuck learners, progressive hints, and waiting for answers applies only to explicitly selected interactive mode. In that mode, choose the one or two most informative questions and use existing information to reduce follow-up questions.
 
 ## Goals and benchmarks
 

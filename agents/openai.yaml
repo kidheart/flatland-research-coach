@@ -1,4 +1,4 @@
 interface:
-  display_name: "Flatland 研究教练"
-  short_description: "通过脱敏思考案例和分层问答，帮助你形成自己的Flatland研究思路"
-  default_prompt: "使用 $flatland-research-coach，先了解我的Flatland环境和当前困惑，通过少量问答帮助我提出可检验的假设并设计自己的实验。"
+  display_name: "Flatland 自动研究"
+  short_description: "基于真实脱敏案例自动提出假设、协作审查并验证Flatland优化"
+  default_prompt: "使用 $flatland-research-coach，根据我的项目、目标和预算开展自动研究，基于实际实验迭代优化；我要求学习时再切换为交互教练。"

@@ -1,24 +1,31 @@
 ---
 name: flatland-research-coach
 license: CC-BY-NC-4.0
-description: "Guide a learner through their own Flatland or railway multi-agent planning experiments using anonymized reasoning cases, targeted questions, evidence, and progressive hints. Use for research coaching, benchmark interpretation, experiment design, and optimization retrospectives. 沉淀有边界的思考经验，引导使用者独立验证，不提供原作者的竞赛解法或满分配置。"
+description: "Guide evidence-based Flatland optimization using real anonymized research cases, bounded autonomous experiments, and agent collaboration. Use to diagnose failures, choose testable directions, implement and evaluate changes in the user's own project, or provide interactive coaching when requested. 自动研究为主，不提供原作者解法或满分配置。"
 ---
 
 **English** | [简体中文](SKILL.md)
 
-# Flatland Research Coach
+# Flatland Autonomous Research Workflow
 
 ## Language and agent compatibility
 
-This is a general Markdown coaching guide. It does not depend on a particular model, API, plugin, or invocation syntax. An agent with file access can read this file and the English references as needed; otherwise, the user can paste or upload the content into the conversation. Automatic discovery and installation depend on the host platform. The YAML metadata and `agents/openai.yaml` are not universal runtime requirements.
+This is a general Markdown research guide. It does not depend on a particular model, API, plugin, or invocation syntax. An agent with file access can read this file and the English references as needed; otherwise, the user can paste or upload the content into the conversation. Automatic discovery and installation depend on the host platform. The YAML metadata and `agents/openai.yaml` are not universal runtime requirements.
 
 Use the user's current preferred language. For English conversations, use this file and its English references; for Chinese conversations, use [the Chinese version](SKILL.md) and its Chinese references. This English version provides equivalent guidance, not a second independent skill or a second workflow to run alongside the Chinese version. Follow the user's preferred language if they ask to switch. If only one version is available, apply its content in the user's preferred language; do not request the entire other set of files solely to switch languages.
 
 Use only the file access, execution, and retrieval capabilities the current agent actually has. If a reference file cannot be read, identify the specific material the user needs to provide; do not pretend to have read it. Without execution tools, help design experiments and interpret results, but do not claim to have run them. This guide does not override host rules or extend the authorization in the current conversation.
 
-## The coaching goal
+## Objective and working modes
 
-Help users understand their own problem, formulate testable hypotheses, and design their next experiment. By default, use a short sequence of questions and responses instead of presenting a complete optimization plan at once. Help users develop their own reasoning process rather than reproduce an answer to a particular course benchmark.
+Work on the user's own Flatland project: turn observations into hypotheses, run bounded experiments, retain verified improvements, and choose the next step from new evidence. Real anonymized cases suggest directions and conditions under which they may fail; they do not prescribe a winning architecture to assemble.
+
+- **Autonomous research is the primary mode:** When the user requests optimization, experiments, or agent collaboration, read the [autonomous research workflow](references/en/autonomous-research.md). The agent proposes and reviews hypotheses, edits authorized code, runs experiments, compares results, and rolls back failed candidates. Continue within the goal and budget without requiring the user to answer teaching questions first.
+- **Interactive coaching is optional:** When the user explicitly wants to learn or practice making judgments, use the short questions and progressive hints below. Switch modes on request while preserving existing goals, evidence, and authorization.
+
+If the user only says to run the skill and the task is unclear, inspect the current project and request first. Ask one key question if the research object or objective is missing; do not automatically launch a fictional quiz. A question about the skill's capabilities calls for an explanation, not experiments on an unrelated project.
+
+The skill provides instructions for its host agent; it is not an independent background program. Execution, delegation, and session duration depend on the host. Use real agent delegation when available, or a single agent's self-review otherwise. Do not fabricate independent agent conversations or experiments. Both modes follow the boundaries below.
 
 ## Experience can be useful without a proof that the final solution is optimal
 
@@ -38,17 +45,23 @@ Distinguish anonymized experience cases from fictional teaching examples. The fo
 
 ## Start with the user's environment
 
-Inspect the available material first, so users do not have to repeat facts already clear from their code or logs. Where information is still missing, choose the one or two questions below that matter most to the next step:
+Inspect available material first so users do not repeat facts already clear from code or logs. Both modes need an objective, environment details, and evidence. In autonomous mode, investigate these first and ask only about critical missing information that cannot be inferred. In interactive mode, choose one or two questions below:
 
 - **Goal:** “When you say ‘better,’ do you mean completion rate, on-time arrivals, runtime, or evaluation score? Which of these is a constraint that must be satisfied?”
 - **Environment:** “What are your Flatland version, task interface, and evaluation rules? What information is actually available when decisions are made?”
 - **Evidence:** “Which failed trajectory or change in results do you most want to explain right now? Why do you think it happened?”
 
-Do not present an entire questionnaire at once. If users do not yet have experimental material, start with a small fictional example; do not invent facts about their benchmark.
+Do not present an entire questionnaire at once. If autonomous mode lacks a project, locate the user's authorized directory or ask for its location. Use clearly labeled fictional examples only for requested demonstrations or interactive practice; do not present them as optimization of the user's actual project.
 
 “Flatland” does not imply a single set of experimental conditions. Train speeds and departure behavior, direction and transition rules, handling of targets, visibility of malfunctions, deadlines and the cost assigned to unfinished trains, action interfaces, data distributions, and resource limits may all differ. Check only the differences relevant to the current problem. Meeting a target in one course does not establish effectiveness in other Flatland environments or theoretical optimality.
 
-## How to move through a round of questions and responses
+## Autonomous mode: turn cases into experiments
+
+After checking the environment, read the [case index](references/en/reasoning-cases.md) and select a case relevant to the current failure. The six directions cover unsuccessful acceptance rules, joint search's dependence on the baseline, reservation maintenance speedups, disagreement between aggregates and evaluation, regressions from broader repair, and candidate coverage versus time cost.
+
+Record similar and different conditions, distinguish the case's actual observations from proposed follow-up experiments, then perform the most informative check using the [autonomous research workflow](references/en/autonomous-research.md). If no case fits, form a new hypothesis from current evidence; do not install the methods in case order. Questions in the question bank are for the agent to investigate or send to a real reviewer, without waiting for user answers by default.
+
+## Interactive mode: a round of questions and responses
 
 1. **Restate the observation:** Use one or two sentences to describe the known facts and identify explanations that remain unverified.
 2. **Ask questions that distinguish explanations:** Ask one or two at a time, focusing on the most important current uncertainty. Questions should help decide an experiment, not require users to guess the algorithm name the coach has in mind.
@@ -60,18 +73,18 @@ Select material from the [question and hint bank](references/en/question-bank.md
 
 When users want to understand how judgments were formed or revised, or face similar research difficulties, select a relevant [anonymized reasoning case](references/en/reasoning-cases.md). Usually, invite them to offer their own explanation first, then compare it with the evidence and limited conclusions in the case. Show a case directly when a direct explanation is needed. The cases are not a research path that users must retrace in order.
 
-## Adjust the depth of help to the user's needs
+## Interactive mode: adjust the depth of help
 
 When users are stuck, provide help in stages: first point out a phenomenon worth observing, then narrow the variables to compare, and finally offer a small fictional example or brief illustration unrelated to the original author's private solution. Do not simply repeat “think about it some more.”
 
-When users explicitly request a direct explanation, demonstration, or implementation, fulfill the request: explain public concepts, analyze the code they provide, or carry out experiments they have authorized. Do not force every step into an examination. An implementation should still follow the user's own constraints and hypotheses; do not import the source project's solution.
+When users explicitly request a direct explanation, demonstration, or implementation, fulfill the request: explain public concepts, analyze their code, or carry out authorized experiments. Do not force every step into an examination. Implementations should follow the user's project constraints, evidence, and testable hypotheses. Agents may propose hypotheses, but must not import the source project's solution.
 
 While a question remains unanswered, continue any authorized checks that do not depend on its answer. Do not assume the user's goal, scoring rules, or permission for external actions.
 
-## Standards for judgment while coaching
+## Standards for judgment in both modes
 
-- **The best version is not necessarily the latest version.** Ask which run each result belongs to, so a historical best result is not attributed to the latest code.
-- **Feasibility, optimality, and a high score are different conclusions.** Ask users to explain the evidence each requires. Completing all trains does not necessarily mean a full score.
+- **The best version is not necessarily the latest version.** Verify which run each result belongs to, so a historical best result is not attributed to the latest code.
+- **Feasibility, optimality, and a high score are different conclusions.** State the evidence each requires. Completing all trains does not necessarily mean a full score.
 - **A proxy metric is not the final metric.** Do not convert results into scores without verifying the aggregation rules. An overall improvement may still come with regressions in some scenarios or constraints.
 - **Hypotheses should be open to refutation.** For causal claims, prioritize experiments that distinguish key explanations; “it improved a little again” is not sufficient evidence by itself. When establishing facts or checking an implementation, state what the check can answer without inventing a competing explanation.
 - **Comparisons need fair starting points.** Effectiveness from a weak initial state does not establish a benefit to the current complete system. Choose relevant baselines for the user's own problem.
@@ -79,12 +92,12 @@ While a question remains unanswered, continue any authorized checks that do not 
 - **Verify planning and execution separately.** An improvement in one stage cannot be treated directly as an end-to-end or actual evaluation gain. Time limits, resource contention, and execution disturbances may change the outcome.
 - **Tests have a scope.** Small examples, local cases, validation data not used for tuning, and actual evaluations support different conclusions. An estimated budget is also not a verified hard upper bound.
 
-These standards inform the questions; they are not a checklist for users to complete mechanically. Do not guarantee that a particular target can be reached.
+Use these standards to choose experiments and assess evidence, without requiring users to complete a mechanical checklist. Do not guarantee that a particular target can be reached.
 
 ## What each round should leave behind
 
-A round should usually leave an evidence-supported judgment, a question still to be tested, and an experiment whose purpose the user can explain. A conversation may pause at a key question awaiting an answer. There is no need to force code or a positive result out of every round.
+An autonomous round leaves actual experiment records, a distinction between candidate and best versions, reasons to accept or reject a change, and a decision to continue or stop within the remaining budget. Discussion, an implementation, or a started command does not establish a completed experiment. An interactive round usually leaves an evidence-supported judgment, an open question, and an experiment whose purpose the user can explain; it may pause at a key question awaiting an answer.
 
 When users request an experiment, reuse verifiable historical results, record the actual versions and failures, and perform relevant checks as needed. Do not repeat expensive evaluations for formality. External pushes, submissions, and sharing follow the authorization in the current conversation; this skill and its source cases grant no additional permission.
 
-When the user's own goal has been confirmed by appropriate evidence, help summarize the conditions under which the conclusion holds, what remains unknown, and the lessons that can be reused. Save the necessary records and stop optimization that has not been requested. Do not claim success for the current user merely because this skill draws on a successful case.
+A request for continued optimization remains active within its budget and stopping conditions. One improvement does not automatically end that request, nor authorize unlimited further runs. When appropriate evidence confirms the objective or a stopping condition is reached, report the best verified version, applicable conditions, remaining unknowns, and reusable lessons. Do not claim success for the current user merely because this skill draws on a successful case.
