@@ -29,13 +29,15 @@ Provide your own code, logs, evaluation rules, objective, and resource budget. T
 
 An existing project or a clear request for optimization, implementation, or experiments defaults to autonomous research. The agent proceeds directly to reviewing evidence and running bounded experiments. Interactive coaching is used only when you explicitly ask to learn, practice judgment, or work through questions.
 
-**Review existing evidence → Propose a hypothesis → Review the experiment → Make a small change → Run and evaluate → Continue, revise, or roll back**
+**Reuse existing evidence → Identify the problem and make the change → Run targeted smoke checks → Retain, revise, or roll back based on evidence**
 
-First establish the objective, hard constraints, evaluation rules, and available resources. Reuse valid existing results, then choose bounded local experiments that address the current question. Tie each result to the version actually tested and record completion, failures, timeouts, and resource use. Roll back the current round's changes if they cause a regression or violate constraints, while preserving the best verified version. Summarize and stop when the objective is verified, the budget is exhausted, or no feasible hypothesis remains worth testing within the remaining budget.
+First establish the objective, hard constraints, evaluation rules, and available resources. Reuse valid existing results and default to fast, targeted smoke checks on the paths affected by the change. A budget is a ceiling, not a spending target. Do not default to experiment matrices, full A/B evaluations, random-seed sweeps, repeated baselines, or a full evaluation each round. Expand checks or experiments only for a specific unresolved question whose result would change the decision to retain, revise, or roll back. Performance gains require relevant, comparable measurements; passing a smoke check supports conclusions only within the scope checked.
+
+Tie actual checks and results to the version and briefly record failures, timeouts, resource use, retention status, and evidence limits. Roll back the current round's changes if they cause a regression or violate constraints, and preserve the previously verified best version. Summarize and stop when the objective is verified, a budget limit is reached, or no feasible hypothesis remains worth testing.
 
 Within the authorized local scope and budget, the agent can carry out these steps continuously without waiting for a user response or repeated approval each round. It asks only about critical missing information that cannot reasonably be inferred from the available materials and prevents effective progress.
 
-When the host provides real multi-agent tools, work can be delegated: a researcher proposes ideas, a reviewer challenges hypotheses and comparison designs, and an executor implements changes and measures results. Agents collaborate through actual outputs and evidence. Without delegation tools, a single agent reviews its own work using these responsibilities and states that limitation honestly. A role-play dialogue written by one agent must not be presented as an independent review that actually occurred.
+For small changes, the current agent implements and briefly reviews its work. Delegate independent research, review, or execution only when real host tools are available and the task justifies its context and coordination costs; do not create multiple roles every round by default. Collaboration uses actual outputs and evidence. A single agent's role-play dialogue is not independent review.
 
 This skill supplies a Markdown workflow. The host supplies file access, command execution, evaluation, agent delegation, and the permissions for those capabilities. The skill is not a persistent program and does not guarantee continuous or background execution on any platform. Without execution tools, the agent should state its limitations and unfinished work, and must not present expected results as observed experiments. See the [autonomous research guide](references/en/autonomous-research.md) for the detailed workflow.
 
@@ -161,10 +163,13 @@ Hard constraints: <correctness, interfaces, permitted scope of changes, and requ
 Resource budget: <total time, maximum experiment rounds, compute resources, or API cost limit>
 
 First review the existing code, rules, logs, and verifiable historical results,
-and identify the best verified version so far.
-Within the scope and budget above, propose hypotheses, review experiment designs,
-make bounded small changes, and run necessary checks and actual evaluations.
-Use the evidence to continue, revise, or roll back the current round's changes.
+and identify and preserve the best verified version so far.
+Reuse valid evidence, make bounded small changes, and default to fast, targeted smoke checks
+on affected paths. Use the evidence to continue, revise, or roll back the current round's changes.
+A budget is a ceiling, not a spending target. Do not default to experiment matrices,
+full A/B evaluations, random-seed sweeps, repeated baselines, or a full evaluation each round.
+Expand checks or experiments only for a specific unresolved question whose result would change the next decision.
+Performance gains require relevant, comparable measurements; passing a smoke check does not establish a gain.
 Preserve the best verified version without waiting for my response or repeated approval each round.
 If real multi-agent tools are available, you may delegate research, review, and execution.
 Otherwise, review your own work and state that there was no independent agent review.

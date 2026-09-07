@@ -2,7 +2,17 @@
 
 # The User's Own Experiment Card
 
-Use this once the research has produced a testable hypothesis. Reuse an existing tracking system; a short experiment may need only a few lines. In autonomous mode, the agent fills in and updates the card. In interactive mode, invite the user to explain first. First-person statements refer to the person or agent making the judgment; do not attribute agent-generated opinions to the user.
+Reuse an existing tracking system rather than creating extra forms. Default small changes and short smoke checks need only the brief record below. Use the longer card that follows as needed for mechanism or performance research with a testable hypothesis; neither the long card nor a full evaluation is required each round. In autonomous mode, the agent fills in and updates the card. In interactive mode, invite the user to explain first. First-person statements refer to the person or agent making the judgment; do not attribute agent-generated opinions to the user.
+
+## Default short record
+
+```text
+Change and actual version:
+Relevant checks / reused evidence → actual results, including failures or timeouts:
+Acceptance decision; best-version location; key claims still unconfirmed:
+```
+
+Passing a smoke check does not establish a performance gain; performance claims require relevant, comparable measurements. When retaining a candidate, also preserve the previously verified best version. A candidate with insufficient evidence does not automatically become the new best version. A budget is a ceiling, not a spending target. Expand checks or use the longer card only for a specific unresolved question whose result would change the next decision.
 
 ## Before the experiment: define the hypothesis and comparison
 
@@ -28,7 +38,7 @@ In interactive mode, add only omissions that affect the conclusion. In autonomou
 Identifiers for the code/configuration and data actually tested:
 Expected samples and samples actually completed; failures/timeouts:
 Changes before and after the new step within the same run, if applicable:
-Complete results and resource use across runs:
+Results and resource use within the scope actually run:
 Changes in key constraints and secondary metrics:
 Actual evaluation results (write "not obtained" if unavailable):
 What the observations support and what they cannot prove:
@@ -37,7 +47,7 @@ Accept, reject, or pending confirmation; location of the retained best version:
 My choice of next step and the reason for it:
 ```
 
-Do not substitute local checks for complete execution or automatically convert local results into server scores. When a gain is close to observed variation, choose a paired or repeated experiment that controls the main uncertainty. In autonomous mode, choose and run it within the budget; in interactive mode, guide the user's choice. Reuse valid evidence when there are no new concerns.
+Keep conclusions within the scope actually checked: local checks do not establish gains in full execution, and local results cannot automatically be converted into server scores. A gain close to observed variation may be marked "unconfirmed" without mandatory repetition. Choose a paired or repeated experiment only if resolving that uncertainty would change the next decision. In autonomous mode, run necessary experiments within the budget; in interactive mode, guide the user's choice. Reuse valid evidence when there are no new concerns; do not default to experiment matrices, full A/B evaluations, random-seed sweeps, or repeated baselines.
 
 ## A short feedback structure for interactive mode
 

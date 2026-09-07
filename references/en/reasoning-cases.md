@@ -8,6 +8,8 @@ To protect the original solution, this document omits source code, exact paramet
 
 ## Choose a case that matches the current observation
 
+The suggested experiments below are research options, not a checklist for every round. Start with existing records and short smoke checks; select a relevant comparison only when its outcome could change the current decision. Follow the escalation conditions in the [autonomous workflow](autonomous-research.md), without running every comparison to retrace the original research.
+
 | Current observation | Relevant case | First action |
 | --- | --- | --- |
 | Search has reached a plateau, and you are considering relaxing the acceptance rule | C1: Allowing sideways moves and temporary deterioration | Check whether new states are actually explored and whether the best solution returned benefits. |

@@ -18,7 +18,7 @@ Use only the file access, execution, and retrieval capabilities the current agen
 
 ## Objective and working modes
 
-Work on the user's own Flatland project: turn observations into hypotheses, run bounded experiments, retain verified improvements, and choose the next step from new evidence. Real anonymized cases suggest directions and conditions under which they may fail; they do not prescribe a winning architecture to assemble.
+Work on the user's own Flatland project: turn observations into hypotheses, prioritize existing evidence and short targeted smoke checks, retain verified improvements, and choose the next step from new evidence. Real anonymized cases suggest directions and conditions under which they may fail; they do not prescribe a winning architecture to assemble.
 
 - **Autonomous research is the primary mode:** When the user requests optimization, experiments, or agent collaboration, read the [autonomous research workflow](references/en/autonomous-research.md). The agent proposes and reviews hypotheses, edits authorized code, runs experiments, compares results, and rolls back failed candidates. Continue within the goal and budget without requiring the user to answer teaching questions first.
 - **Interactive coaching is optional:** When the user explicitly wants to learn or practice making judgments, use the short questions and progressive hints below. Switch modes on request while preserving existing goals, evidence, and authorization.
@@ -59,6 +59,10 @@ Do not present an entire questionnaire at once. If autonomous mode lacks a proje
 
 After checking the environment, read the [case index](references/en/reasoning-cases.md) and select a case relevant to the current failure. The six directions cover unsuccessful acceptance rules, joint search's dependence on the baseline, reservation maintenance speedups, disagreement between aggregates and evaluation, regressions from broader repair, and candidate coverage versus time cost.
 
+By default, check only affected paths and reuse valid results and small failure reproductions. Documentation or metadata edits do not require solver runs. A smoke check must reach the changed behavior and check the relevant interface, trajectory, or constraint, not merely confirm startup. After it passes, do not broaden testing without a concrete concern that could change the current decision. Batch A/B tests, full regression runs, seed sweeps, and repeated baselines are not default steps. Use full evaluation only when the current objective, explicit project requirements, or a concrete risk requires it, selecting the smallest necessary scope through the [autonomous workflow](references/en/autonomous-research.md).
+
+Read only the current language and relevant case sections, and reuse existing logs for short records. Budgets are ceilings, not spending targets. More tests, more agents, and longer reports must not substitute for useful new information.
+
 Record similar and different conditions, distinguish the case's actual observations from proposed follow-up experiments, then perform the most informative check using the [autonomous research workflow](references/en/autonomous-research.md). If no case fits, form a new hypothesis from current evidence; do not install the methods in case order. Questions in the question bank are for the agent to investigate or send to a real reviewer, without waiting for user answers by default.
 
 ## Interactive mode: a round of questions and responses
@@ -88,7 +92,7 @@ While a question remains unanswered, continue any authorized checks that do not 
 - **A proxy metric is not the final metric.** Do not convert results into scores without verifying the aggregation rules. An overall improvement may still come with regressions in some scenarios or constraints.
 - **Hypotheses should be open to refutation.** For causal claims, prioritize experiments that distinguish key explanations; “it improved a little again” is not sufficient evidence by itself. When establishing facts or checking an implementation, state what the check can answer without inventing a competing explanation.
 - **Comparisons need fair starting points.** Effectiveness from a weak initial state does not establish a benefit to the current complete system. Choose relevant baselines for the user's own problem.
-- **Separate efficiency gains from changes in strategy.** A claim of a pure speedup needs behavioral evidence under the same workload. A claim of improved quality needs evidence from complete execution under comparable resources.
+- **Separate efficiency gains from changes in strategy.** Passing smoke checks does not establish a performance gain. Efficiency or quality claims need relevant measurements under comparable resources. Equal-work behavioral comparisons and full execution answer different questions; neither is mandatory every round. Leave unsupported claims unconfirmed rather than forcing more tests.
 - **Verify planning and execution separately.** An improvement in one stage cannot be treated directly as an end-to-end or actual evaluation gain. Time limits, resource contention, and execution disturbances may change the outcome.
 - **Tests have a scope.** Small examples, local cases, validation data not used for tuning, and actual evaluations support different conclusions. An estimated budget is also not a verified hard upper bound.
 
@@ -100,4 +104,4 @@ An autonomous round leaves actual experiment records, a distinction between cand
 
 When users request an experiment, reuse verifiable historical results, record the actual versions and failures, and perform relevant checks as needed. Do not repeat expensive evaluations for formality. External pushes, submissions, and sharing follow the authorization in the current conversation; this skill and its source cases grant no additional permission.
 
-A request for continued optimization remains active within its budget and stopping conditions. One improvement does not automatically end that request, nor authorize unlimited further runs. When appropriate evidence confirms the objective or a stopping condition is reached, report the best verified version, applicable conditions, remaining unknowns, and reusable lessons. Do not claim success for the current user merely because this skill draws on a successful case.
+A request for continued optimization remains active within its budget and stopping conditions. One improvement does not automatically end that request, nor authorize unlimited further runs. Remaining budget alone is not a reason to test: the next check must resolve a concrete question and affect the next decision. When appropriate evidence confirms the objective or a stopping condition is reached, briefly report the best verified version, applicable conditions, remaining unknowns, and the stopping reason. Do not claim success for the current user merely because this skill draws on a successful case.
