@@ -102,4 +102,4 @@ User: “Start from the same input, run to completion, and record both the resul
 
 Coach: “That separates several levels of the result. If both runs are time-limited, what else would you need to record to avoid attributing a difference in workload to the new step?”
 
-This dialogue illustrates how to proceed gradually in response to the user's answers. It does not require the user to guess a designated algorithm or provide the source project's implementation.
+This dialogue illustrates how to proceed gradually in response to the user's answers. It does not require the user to guess a designated algorithm, and it does not provide the source project's implementation.
