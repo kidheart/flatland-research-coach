@@ -1,58 +1,71 @@
 [简体中文](README.md) | **English**
 
-![Flatland Research Loop: from observations to testable judgments](assets/cover.svg)
+![Flatland Research Loop: from objective gaps to measured quality](assets/cover.svg)
 
 # Flatland Research Loop
 
-**Autonomous Flatland research centered on diagnosis**
+**Autonomous Flatland optimization aimed at measured solution quality**
 
-Start with your existing system, understand its code and evaluation rules, locate losses or the first divergence between plans and execution in its traces, then choose an evidence-based place to change and confirm it with a short smoke check. Anonymized cases drawn from real experiments help an agent decide: **which conditions fit the current symptom, where to look, and which change is worth trying.**
+Start with your objective and existing solver, identify major losses, change planning, search, or execution decisions using algorithmic ideas, and run the candidate solver to see whether quality improves. The core loop is **objective gap → algorithmic mechanism → implementation → correctness check → quality comparison → validation and continuation.**
 
-This is an agent-agnostic Markdown skill with Python standard-library trace tools and synthetic examples. Diagnosis and changes proceed autonomously by default; interactive coaching is available when you want to learn, practice reasoning, or work through questions. Chinese and English are two editions of the same guidance, with no separate installation needed. The repository and skill identifier is `flatland-research-loop`.
+This agent-agnostic Markdown skill includes Python standard-library tools, Chinese and English guidance, and useful ideas alongside failed directions distilled from real research. Autonomous optimization is the default; learning through questions is optional. The author's full-score code, exact parameters, and reconstructable final combination are not included.
 
 ## What you get
 
-- **Where the problem is:** the relevant train, time, location, or code path and the associated observable loss.
-- **Evidence for the diagnosis:** a trace window, metrics, or code evidence, separating the first deviation from its downstream effects.
-- **What to change and why:** a chosen location based on the current system's capabilities and the conditions of relevant cases.
-- **The smallest useful check:** what actually ran on the affected path, whether it passed, and whether it timed out.
-- **What remains unverified:** for example, whether a local fix improves full-run evaluation or whether another explanation remains possible.
+- **A defined objective and gap:** the actual primary metric, hard constraints, best verified version, and major remaining losses.
+- **A reason to change decisions:** which capability is missing, which user function changes, and why it could improve the objective.
+- **Real quality feedback:** objective changes, per-case regressions, failures, and compute costs from runs in which the candidate solver participated.
+- **A recoverable best version:** correctness, screening, independent validation, and official confirmation remain distinct.
+- **A next action after failure:** update the loss explanation, change mechanisms, or address another relevant instance; rejecting one candidate does not automatically end optimization.
 
-Use it when plan cost falls but the final score worsens, rescheduling after a malfunction takes more time, trains stall or arrive late, or a local method loses its benefit inside the full system. Provide the project path, existing results, evaluation rules, and time budget to begin. The agent reads available material first and asks only about critical gaps.
+Use it for valid but poor schedules, stalled search, disruption losses, or proxy gains accompanied by official-score regressions. Supply the project, existing results, evaluation rules, objective, and resource limits. The agent reads available material before asking for missing information.
 
-## Default workflow
+## Transfer ideas from algorithms
 
-**Understand the system and evaluation → locate losses and the first divergence → choose where to change based on conditions → make a targeted change → confirm with a short smoke check**
+The [algorithm playbook](references/en/algorithm-playbook.md) connects research lessons with public algorithmic principles. Choose by the current loss instead of installing a fixed architecture:
 
-1. **Understand the current system.** Establish inputs and outputs, how plans become actions, execution state, evaluation rules, and what existing modules actually solve. Reuse trustworthy results first.
-2. **Ground the symptom in evidence.** Start with a loss that affects the objective, inspect relevant trains and time windows, and trace back to the earliest observable divergence. Consider locations such as path quality, action conversion, state synchronization, reservations and occupancy, or the relationship between metrics and scoring.
-3. **Use cases to narrow the change.** Compare their conditions and evidence limits with the current system. Determine whether the system actually lacks the relevant capability and form an explanation that can be checked.
-4. **Change and check the affected path.** Preserve the best verified version so far and a recoverable checkpoint, make a targeted change, and run a short smoke check sufficient to test the current explanation. Keep, revise, or roll back based on the result.
-5. **Deliver a brief account.** State the finding, evidence, change, actual check, and unresolved points. Expand only when a larger check would change the next decision; stop at the objective or budget limit.
+| Current problem | Idea to investigate |
+| --- | --- |
+| Spatially short routes are temporally infeasible or expensive to search | Orientation-aware A*, time constraints, and SIPP: represent conditions that actually determine reachability. |
+| Early planning consumes bottleneck capacity and later trains lose out | Order allocation in prioritized planning and LNS neighborhoods that reconsider related trains together. |
+| Good plans lose quality after disruptions | Dependency coordination and partial repair: examine commitments, actual state, and the affected boundary. |
+| The same candidates consume the available time repeatedly | Fair coverage and resumable search; incremental maintenance reduces repeated work so useful candidates receive more computation. |
 
-A budget is a ceiling, not a spending target. The current agent handles ordinary small changes; A/B evaluations, multiple agents, and long evaluations are used when specifically needed. A passing smoke check supports only its tested scope. Performance gains still require relevant, comparable measurements.
+In a synthetic bottleneck, A's better route is blocked by B's reservation. Replanning A repeatedly may never help. Releasing related decisions together and replanning that group changes which solutions search can reach. In another synthetic example, restarting a scan at its beginning after every gain can leave later blocking components untouched. **Change what search can express and actually visits, not merely how long it runs.**
 
-Within the authorized local scope, the agent continues without repeated approval each round. The host supplies file access, commands, and execution; this skill is not itself a background service. See the [diagnosis guide](references/en/diagnosis.md) and [autonomous research guide](references/en/autonomous-research.md) for details.
+These are mechanism explanations; synthetic examples are not competition results. Real cases retain failures and conditional gains. Finding a mechanism in source code does not alone establish that it caused a score improvement.
 
-## Trace tools
+## Default workflow: verify correctness and quality separately
 
-[scripts/rail_trace.py](scripts/rail_trace.py) uses the Python standard library to process traces in a defined format. It helps reduce a failure to an inspectable evidence window. See the [tooling guide](references/en/tooling.md) for the data format, runtime requirements, adapter interface, and usage.
+1. **Define the objective and explain the gap.** Align evaluation rules, runtime constraints, and the best version. Inspect major losses and unexplained portions. A server regression has an unconfirmed cause; one regression does not establish overfitting.
+2. **Choose an evidence-backed mechanism.** Map the idea to current project code and predict a quality change and plausible costs, instead of remaining confined to parameter tweaks.
+3. **Reject broken implementations with a short smoke check.** Check affected interfaces, conflicts, or recovery behavior. Optimization proceeds to quality evaluation after a pass; a narrowly requested bug fix can finish within its own scope.
+4. **Screen representative instances.** Actually invoke the candidate solver through the native entry point, covering the target loss and plausible tradeoffs. Reuse matching baseline evidence rather than selecting only favorable cases.
+5. **Validate promising candidates.** Use relevant instances or independently reserved run conditions not involved in selection. Repeating screening cases checks stability, not unseen-scenario performance. An official-score target needs appropriate official evidence. Update the best version and address the remaining gap.
 
-| Tool | Purpose | Limits of the result |
+Do not default to parameter matrices, seed sweeps, exhaustive ablations, or full A/B evaluations each round. Quality comparison is part of optimization. Fixed-action replay cannot establish an improved planning policy. Reserve full evaluations for promising versions, concrete regression risks, or target verification. See [autonomous research](references/en/autonomous-research.md) and [quality evaluation](references/en/quality-evaluation.md).
+
+One failed direction does not end an unmet objective. When explicit resources run out or a required external condition is missing, preserve state and explain the unmet target and what is needed next. Pausing because currently feasible mechanisms appear exhausted requires evidence of explored mechanisms, remaining alternatives, and the conditions each lacks. Do not stop with an unsupported “no worthwhile next step” or spend indefinitely. Execution and permissions come from the host; the skill is not a background service.
+
+## Quality and trace tools
+
+| Tool | Actual purpose | Limits |
 | --- | --- | --- |
-| `diagnose` | Summarize observable trace problems and locate the first recorded comparable difference between planned and actual states. | Produces diagnostic leads; confirming the cause still requires the current code, state, and evaluation rules. |
-| `slice` | Extract a time window, retaining neighboring records and agent metadata to reduce reading. | Slices logs without advancing an environment; it is not simulation. |
-| `replay` | Restore a checkpoint through the current project's adapter and actually advance execution, with an enforced timeout. | Requires a user-provided adapter and checkpoint suitable for the current environment. Run results exist only when execution actually occurs. |
-| `reservations` | Audit reference counts, overlaps, releases, rollbacks, and observed snapshots in reservation events. | Checks only the supplied events and snapshots; it cannot alone prove equivalence with a full rebuild or schedule feasibility. |
+| [quality_compare.py](scripts/quality_compare.py) | Align versions, instances, environment, resources, and objectives from native evaluation exports; report quality changes and major regressions. | Does not run the solver or invent scores. Missing or incomparable results cannot prove improvement; promotion is not automatic. |
+| `rail_trace.py diagnose` | Locate the first comparable plan/execution divergence, explicit waits, and conflicts under declared semantics. | Diagnostic leads, not direct proof of causes or performance losses. |
+| `rail_trace.py slice` | Extract a relevant time window. | A log slice, not simulation or a complete checkpoint. |
+| `rail_trace.py replay` | Actually execute a supplied checkpoint and actions through a project adapter. | Requires adaptation; fixed-action replay cannot replace candidate-planner evaluation. |
+| `rail_trace.py reservations` | Check reservation events, releases, rollbacks, and supplied snapshots. | Covers only the given event model and observations. |
 
-Try two synthetic examples from the repository root:
+Try public synthetic data from the repository root:
 
 ```text
+python scripts/quality_compare.py examples/synthetic_quality_baseline.json examples/synthetic_quality_candidate.json
 python scripts/rail_trace.py diagnose examples/synthetic_trace.json
 python scripts/rail_trace.py replay examples/synthetic_replay.json --adapter scripts/synthetic_rail_runner.py
 ```
 
-The [synthetic miniature runner](scripts/synthetic_rail_runner.py) and [fixtures in examples/](examples/) demonstrate tool behavior. The second command actually executes that runner, with a default timeout of 10 seconds. They are not a Flatland environment, do not correspond to the original competition experiments, and do not establish real-project performance. The tools do not claim automatic compatibility with every Flatland version. Integration requires checking the meanings of state, actions, time steps, and checkpoints in your project.
+The first command compares prepared synthetic evaluation data without running Flatland; the third executes a synthetic miniature runner. They demonstrate tools, not the original competition or real performance. Use your project's evaluator, state semantics, and adapters. Formats and usage are in [quality evaluation](references/en/quality-evaluation.md) and the [trace tooling guide](references/en/tooling.md).
 
 ## Find a real case from the symptom
 
@@ -89,11 +102,13 @@ Current problem or objective: <symptom or metric to improve>
 Available material: <locations of code, evaluation rules, traces, or results>
 Permitted changes and time budget: <scope and budget>
 
-First understand the current system and evaluation, then use existing evidence
-to locate losses or the first divergence. Choose where to change based on
-the conditions of relevant cases, make a targeted change, and run a short smoke check.
-Proceed autonomously within the authorized scope. Briefly report the problem,
-evidence, reason for the change, actual checks, and what remains unverified.
+Establish the actual metric, target, constraints, best version, and major quality gap.
+Use algorithmic mechanisms and real cases to choose a change. After smoke checks,
+run the candidate solver for representative quality comparison and validate promising candidates.
+Reuse matching baselines; do not default to parameter matrices or full A/B each round.
+If a direction fails, update the explanation and choose another. Smoke success is not optimization success.
+Proceed within authorization and resources. Report quality changes, regressions,
+the best version, and the remaining objective.
 Respond in English. Switch to interactive coaching only when I explicitly ask
 to learn or work through questions.
 ```
@@ -150,6 +165,8 @@ and help me design a small check that distinguishes the explanations.
 | File | Purpose |
 | --- | --- |
 | [Chinese skill](SKILL.md) · [English skill](SKILL.en.md) | A lightweight entry point and reading routes for the current task. |
+| [Algorithm playbook](references/en/algorithm-playbook.md) · [中文](references/algorithm-playbook.md) | Select ideas that change search or execution decisions from the observed loss. |
+| [Quality evaluation](references/en/quality-evaluation.md) · [中文](references/quality-evaluation.md) | Representative screening, validation, and the quality comparison format. |
 | [Diagnosis guide](references/en/diagnosis.md) · [中文](references/diagnosis.md) | Locate problems from the system, evaluation, and traces; choose where to change. |
 | [Tooling guide](references/en/tooling.md) · [中文](references/tooling.md) | Trace format, tool usage, and replay integration boundaries. |
 | [Trace tools](scripts/rail_trace.py) · [Synthetic examples](examples/) | Local evidence inspection tools and demonstration data. |

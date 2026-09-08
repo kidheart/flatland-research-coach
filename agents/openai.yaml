@@ -1,4 +1,4 @@
 interface:
   display_name: "Flatland Research Loop"
-  short_description: "从轨迹诊断Flatland损失，用真实案例选择改动并做针对性验证"
-  default_prompt: "使用 $flatland-research-loop，先根据我的代码、规则和轨迹诊断问题，再说明修改位置与理由，用最小必要检查验证，并在目标和预算内推进。"
+  short_description: "围绕明确目标选择Flatland算法改动，用实际求解质量反馈持续优化"
+  default_prompt: "使用 $flatland-research-loop，明确我的目标与质量差距，结合算法思想改进求解器，冒烟后测量实际质量并验证有希望的候选，在授权和预算内持续推进。"

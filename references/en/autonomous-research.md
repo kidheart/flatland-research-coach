@@ -1,67 +1,71 @@
-# After diagnosis: implement, confirm, and stop
+# Autonomous optimization: from the target gap to candidate promotion
 
 [简体中文](../autonomous-research.md) | **English**
 
-Use this after the [diagnosis guide](diagnosis.md) identifies an evidence-supported problem and a next decision. If the fault is already located, proceed directly to a local repair; if a critical observation is missing, collect it first. The user need not answer a quiz each round. Ask only about critical facts that cannot be established from available material and affect progress.
+Use this workflow to advance the user's own Flatland objective. Follow the [diagnosis guide](diagnosis.md) to identify loss and a mechanism that can change it, then use the [algorithm playbook](algorithm-playbook.md) to implement and evaluate. The agent proceeds by default; the user need not answer questions every round.
 
-## Establish the bounds
+## 1. Establish the objective and a recoverable starting point
 
-From project instructions, code, logs, and the current request, establish the working directory and editable scope; primary metric and hard constraints; baseline version and existing evidence; available data and actual execution entrypoint; and resource limits such as time, computation, and experiment count. Reuse existing records instead of asking the user to fill in a new form.
+Confirm the following from the request, evaluator, and existing results. Use the project's existing record.
 
-The budget covers all agents, experiments, and context overhead; it is a ceiling, not a spending target. Enforce timeouts for potentially long runs and reserve time for brief analysis and saving results. Without a specified budget, start with read-only investigation and short checks whose costs can be estimated. Do not expand these into parameter matrices, full A/B runs, or long experiments. Clarify the budget only for necessary long runs whose cost is unknown, without asking for fresh approval for each smoke check.
-
-Preserve a recoverable baseline and best version in the user's project. Keep candidates and unverified changes separate. Revert only failed changes introduced by this work, preserving the user's existing modifications. External submissions, pushes, sharing, and paid resources follow current conversation authorization; this mode neither adds a repetitive confirmation requirement nor grants extra permissions.
-
-## Default to short checks; expand for a reason
-
-Choose the cheapest evidence sufficient to answer the current question. These are options, not stages that every change must complete.
-
-| Scope | When to use it; when to stop |
+| Item | Decision to establish |
 | --- | --- |
-| Existing records and static inspection | Reuse valid results tied to the relevant version, data, and environment. Do not rerun an answered question or use unrelated old results to validate changed behavior. |
-| Targeted smoke checks | Default to exercising affected paths, preferably with a small failure reproduction. Check relevant action interfaces, conflicts/occupancy, targets, or rollback. A successful exit is insufficient. If the behavior matches expectations and no concrete concern remains, stop expanding tests. |
-| Focused comparisons | Use only when a performance or strategy hypothesis affects acceptance, or smoke checks leave a specific ambiguity. Choose the smallest representative cases and comparable resources. Reuse valid baseline results rather than running both versions across the entire suite by default. |
-| Broader or full evaluation | Use only for evidence required by the current objective, explicit project checks, or a concrete regression risk unresolved by smaller checks. State which decision could change, why smaller checks are insufficient, the cost, and the stopping condition. Do not repeat a passing run for reassurance. |
+| Primary objective | Metric, direction, and target value or explicit completion condition. Preserve a requested score target; do not invent conversions when the formula is unknown. |
+| Hard constraints | Legal actions, occupancy rules, runtime, and other real limits. Do not improve an objective by violating its constraints. |
+| Best verified version | Recoverable location, measured result, and evidence scope. The latest files are not automatically the best version. |
+| Evaluation conditions | Data, environment, version, entry point, and relevant randomness. Separate server results, official local metrics, and custom proxies. |
+| Resources and authorization | Existing time, compute, and external execution limits. Reuse session authorization rather than seeking approval repeatedly. |
 
-Do not default to batch A/B tests, exhaustive parameter searches, seed sweeps, full ablation matrices, or both fixed-work and fixed-time experiments. For gains close to noise, keeping performance unconfirmed and stopping is valid. Run bounded repeats only when resolving that gain is worth the cost and would affect the choice.
+Ask only for a missing detail that affects the decision. No stated budget does not prohibit quality evaluation: inspect the native runner and existing timings, then proceed with a representative evaluation whose cost can be estimated and whose timeout is appropriate. Clarify expensive runs with unknown cost or resources outside authorization; do not invent a large default experiment budget.
 
-Smoke checks can support “the tested path works” or “this failure is fixed,” not “the system is faster” or “the score improved.” Preserve the usable candidate separately from the best version with verified performance. Missing performance evidence need not block a specifically validated repair, but cannot upgrade the performance claim. Without a new change, failure, or explicit unresolved question, do not repeat checks.
+Keep the best version and the user's existing work recoverable while working on a candidate. On failure, undo only this round's own changes or discard the isolated candidate. Do not default to recommending history deletion, a hard reset, or force-pushing; rewriting history needs corresponding session authorization. Restoring a reliable version is not a reason to stop research.
 
-## The decision to establish before editing
+## 2. Separate correctness checks from quality evidence
 
-Map the diagnosis to a file/function in the user's project. Explain its connection to the objective, the judgment supported by evidence, and the change expected in the smallest check. Do not manufacture competing hypotheses for a directly located simple bug. For an unconfirmed mechanism, state which observation could refute it.
+When the user asks for better solutions or scores, **smoke checks admit a candidate to evaluation; quality comparison is required to accept an optimization**. A narrowly scoped interface repair may finish after its affected behavior is verified. If the overall task remains quality improvement, that repair completes only a stage.
 
-When experience helps, read only a relevant [decision card](reasoning-cases.md). Its evidence branches guide where to inspect or whether to change direction; they do not supply code. If clock, occupancy, or blocking semantics are missing, establish the mapping first. Unreliable diagnostic output must not drive solver changes.
-
-## Divide work when useful; agreement is not evidence
-
-| Responsibility | Deliverable |
+| Gate | Question and condition for progress |
 | --- | --- |
-| Research and integration | Define the question, testable hypothesis, candidate change, and experiment contract; maintain the best version and remaining budget; decide the next step. |
-| Counterexample review | Check confounders, counterexamples, constraint regressions, and whether the experiment distinguishes explanations; identify the most valuable missing check rather than demanding unlimited testing. |
-| Implementation and evaluation | Implement the candidate, run specified checks, and return actual versions, raw results, failures, and resource use. The integration agent may perform this work. |
+| Targeted smoke | Does the affected behavior obey the rules, fix the original failure, and preserve relevant update/recovery behavior? Diagnose failures; after a pass, quality candidates proceed to actual evaluation. |
+| Representative quality screen | Does the candidate improve the primary objective against a valid baseline, and at what cost? Run the actual candidate solver on representative instances covering the target loss and plausible adverse effects, using episodes or native quality evaluation long enough to expose downstream consequences. |
+| Promotion validation | Does improvement extend beyond the cases used for development and selection? Evaluate promising candidates on held-back or fresh cases and cover exposed regression risks. Data already used to choose the approach are not independent validation. |
+| Authoritative target confirmation | Does the claim require official or server evidence? Competition score and target-attainment claims require the corresponding real evaluation. If unavailable, retain a pending candidate without inventing a score or completion. |
 
-For small changes, the current agent implements and briefly reviews its work; do not create three roles or a fresh review agent every round by default. Delegate only when real tools exist and an independent, bounded task justifies its context and coordination costs. Provide only necessary rules, relevant differences or results, and the requested output. Avoid priming an independent reviewer with the conclusion that an idea should work. Use one integrator and clear edit scopes, without repeatedly reading full histories or verifying the same fact.
+Before screening, explain why the selected cases can reveal both the benefit and its possible cost. Do not select only known wins. If a policy affects the full episode, a few successful opening actions cannot establish its final result. Fixed-action replay can check execution; evaluating planning quality requires actually invoking the candidate's planning or repair decisions.
 
-Without delegation tools, the same agent proposes a change and checks counterexamples, explicitly identifying this as single-agent self-review. Do not invent researcher/reviewer conversations or claim independent verification. Review should produce an executable check or a clear acceptance/rejection reason. Continue discussion only when new evidence or concerns justify it.
+Reuse historical baseline results when inputs, versions, and relevant resource conditions match; do not rerun both versions automatically. Choose the resource basis needed for the question. Compare time-limited tasks under their actual limits rather than requiring both fixed-work and fixed-time matrices. Retain missing results, failures, timeouts, and per-case regressions; never compare only successful samples. See [quality evaluation and comparison](quality-evaluation.md).
 
-Avoid running baseline and candidate timing experiments concurrently when they compete for hardware. Text review and independent analysis may run in parallel; experimental conditions and version dependencies must remain explicit.
+Do not default to bulk A/B runs, parameter grids, seed sweeps, or exhaustive ablations. Advance one justified mechanism at a time. If representative evidence cannot distinguish gain from variation, add only a bounded comparison that affects selection. Reject a candidate with no clear benefit; “performance unconfirmed” cannot substitute for the requested quality conclusion. Use a complete benchmark when promotion or target confirmation needs it, not mechanically every round.
 
-## The autonomous loop
+## 3. The autonomous loop
 
-1. **Preserve the starting point.** Retain a recoverable version and valid existing results. Do not rerun the baseline by default or treat the newest file as the best version automatically.
-2. **Receive the diagnosis.** Connect the problem and evidence to the user's function. With insufficient diagnosis, the current candidate is an observation change, not a speculative algorithm change.
-3. **Define confirmation.** State how the original failure should change and which related behavior must remain valid. Use a native small reproduction, or the [tool protocol](tooling.md) to extract a segment, check events, and replay through a project adapter. A slice alone is not execution.
-4. **Implement and check.** Change the located decision or implementation, run the selected check, and record actual completion, failure, or timeout. On failure, revisit the diagnosis rather than automatically expanding search or a test matrix.
-5. **Accept or reject.** Apply acceptance criteria and hard constraints, distinguishing a verified repair, unconfirmed performance, and a verified performance gain. Revert only this round's rejected changes; promote only claims supported by appropriate evidence.
-6. **Update the diagnosis or stop.** Feed results back into the selected branch and record excluded explanations and reconsideration conditions. Continue only for a decision-changing check worth its cost, not because budget remains.
+1. **Update the target gap.** Read valid results for the best version and identify the main losses, unexplained remainder, and current priority. A solver can be correct yet make poor planning decisions; do not search only for crashes and trace divergence.
+2. **Choose a mechanism that can change it.** Use [diagnosis](diagnosis.md), [algorithm ideas](algorithm-playbook.md), and relevant [real cases](reasoning-cases.md) to explain why the current representation, search, coordination, or recovery may leave this loss. Locate the user's functions, identify the decision to change, and state what would contradict the explanation.
+3. **Set acceptance criteria.** Establish the primary objective, hard constraints, relevant costs, and required evidence before implementation. If the real objective permits local regressions in exchange for aggregate benefit, follow that objective; do not revise criteria afterward to favor a candidate.
+4. **Implement, smoke, and screen.** Fix implementation failures, then run actual quality evaluation. Record the tested version, scope, results, and resources. Add only observations needed for the decision, not an unrelated telemetry system.
+5. **Validate and decide promotion.** A promising candidate becomes the best at a given evidence level only after the corresponding validation. Distinguish the local best, authoritative best, and pending candidate; local gains cannot overwrite a known better server-tested version.
+6. **Update the mechanism judgment and continue toward the target.** On failure, identify the layer that failed and return to loss analysis or change mechanisms. After a local success, inspect the remaining gap. End target work when the target has corresponding evidence.
 
-Use the short record in the [experiment card](experiment-card.md) or existing logs; expand fields only as needed for mechanism or performance research. Keep the version, check results, and acceptance rationale without producing long reports, retelling every case, or repeating raw output for each smoke check. Record the agent's own judgment rather than the user's supposed opinion, and distinguish proposed, implemented, started, completed, and verified work.
+Use the [short record](experiment-card.md) to preserve changes in the gap, quality results, versions, and the next decision. Do not reread every case, generate long reports, or repeat raw output every round.
 
-## Comparisons and stopping
+## 4. What to do after a failure
 
-When a comparison is needed, control inputs, versions, and relevant randomness, and choose the work or time measure that answers the question rather than running both automatically. Causal explanations need to separate strategy, throughput, and machine variation; whole-task claims require corresponding execution evidence. Data already used for selection are not unseen validation data, but ordinary smoke checks do not require a new training/validation pipeline.
+| Result | What should change next |
+| --- | --- |
+| The implementation is inactive or violates rules | Fix integration, state, or constraints. This does not establish that the algorithmic idea is ineffective. |
+| The mechanism acts and a proxy improves, but the primary objective does not | Check objective alignment, downstream execution, and the expected beneficiary cases. Do not keep improving only the proxy. |
+| Relevant cases improve while another group regresses | Investigate applicability, effects on other agents, and resource costs; then limit scope, change the mechanism, or reject it. |
+| No benefit under comparable conditions | Reject this candidate and update the explanation. Select a different mechanism from the remaining loss instead of endlessly adjusting one parameter. |
+| Local improvement but authoritative regression | First record “regression observed; cause unknown.” Check submitted version, evaluation conditions, per-case loss, constraints, and budget before investigating scenario differences. Discuss overfitting only with supporting evidence; it is not a ready-made reason to stop. |
 
-Save state and stop the affected work when evidence confirms the objective, the budget is exhausted, no next check can change the decision at a worthwhile cost, or critical input, tools, or permissions are missing. Without execution tools, provide analysis and a transferable experiment contract, label it not run, and do not claim completed autonomous optimization. Do not claim continued background work after the host stops execution; persistent execution requires host support.
+Maintain a short mechanism frontier: main remaining loss, tried directions and outcomes, different mechanisms still available, and the next distinguishing evidence. It supports changing direction; it does not require testing every algorithm. More accepted moves or more tests are not substitutes for improved quality.
 
-Deliver the problem location, evidence, change rationale, actual checks, and unproven claims, with recoverable candidate/best-version locations and the stopping reason. State when performance comparisons were not run; local diagnosis does not establish competition scores or global optimality. Even without an improvement, preserve justified updates and a reliable baseline rather than treating a tested negative result as a permanent ban on a method family.
+## 5. Delegation and stopping
+
+Use independent agents for concrete, bounded work that saves effort or improves judgment, such as checking a mechanism's counterexample, implementing an isolated candidate, or inspecting per-case regressions. One integrator maintains the objective, best version, and total budget. Avoid duplicating the full history across agents or timing competing versions concurrently on shared hardware. Do not claim independent review when none occurred.
+
+**Rejecting a candidate, completing a repair, and stopping the whole optimization task are different decisions.** With an unmet target and available resources, “no worthwhile next step” or an unsupported judgment of negative expected value does not justify stopping. Investigate another mechanism behind the unexplained loss or obtain evidence that determines a direction.
+
+End or pause the whole task when the objective has corresponding evidence, the user asks to stop, the real budget is exhausted, or a necessary next action is blocked by a specific missing input, tool, or authorization. A pause is also possible after bounded investigation has ruled out the currently supported mechanism frontier, but document the mechanisms tested, their evidence, remaining alternatives, and what each lacks. Do not merely call them unworthy; neither must every imaginable algorithm be exhausted nor spending continue indefinitely.
+
+Deliver **objective and remaining gap → mechanism and changes → actual quality comparison → candidate and best versions → next action or specific pause reason**. State when the target remains unmet. A local negative result does not prove infeasibility, and success on one benchmark does not prove universal optimality. Do not claim background work after the host ends execution.

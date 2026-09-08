@@ -1,0 +1,25 @@
+{
+  "schema": "rail-quality/v1",
+  "synthetic": true,
+  "solver_version": "illustrative-baseline",
+  "role": "screen",
+  "evidence": {"kind": "local", "reference": "invented-example-baseline; not an executed Flatland run"},
+  "comparison": {
+    "suite": "invented-representative-slice-v1",
+    "evaluator": "invented-total-delay-v1; no course score",
+    "environment": "invented-fixed-environment-v1",
+    "budget": "invented-identical-per-case-budget-v1"
+  },
+  "objective": {"name": "illustrative_total_delay", "direction": "min", "aggregation": "sum"},
+  "execution": {"kind": "episode", "solver_invoked": true},
+  "expected_cases": [
+    {"id": "junction", "scenario": "contested junction", "input_fingerprint": "invented-junction-input-v1"},
+    {"id": "corridor", "scenario": "opposing corridor traffic", "input_fingerprint": "invented-corridor-input-v1"},
+    {"id": "easy", "scenario": "sparse traffic tradeoff guard", "input_fingerprint": "invented-easy-input-v1"}
+  ],
+  "records": [
+    {"id": "junction", "input_fingerprint": "invented-junction-input-v1", "status": "ok", "objective": 60, "constraints_passed": true, "runtime_seconds": 1},
+    {"id": "corridor", "input_fingerprint": "invented-corridor-input-v1", "status": "ok", "objective": 30, "constraints_passed": true, "runtime_seconds": 1},
+    {"id": "easy", "input_fingerprint": "invented-easy-input-v1", "status": "ok", "objective": 10, "constraints_passed": true, "runtime_seconds": 1}
+  ]
+}

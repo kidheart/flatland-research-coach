@@ -1,62 +1,59 @@
-[简体中文](../experiment-card.md)
+# Experiment record: objective, mechanism, and measured quality
 
-# The User's Own Experiment Card
+[简体中文](../experiment-card.md) | **English**
 
-Reuse an existing tracking system rather than creating extra forms. Default small changes and short smoke checks need only the brief record below. Use the longer card that follows as needed for mechanism or performance research with a testable hypothesis; neither the long card nor a full evaluation is required each round. In autonomous mode, the agent fills in and updates the card. In interactive mode, invite the user to explain first. First-person statements refer to the person or agent making the judgment; do not attribute agent-generated opinions to the user.
+Reuse the user's existing records. Keep decisions short by default and expand only for complex mechanisms or difficult results; do not require a report every round. In autonomous mode the agent records its own judgments. Interactive mode may invite the user's explanation first, without impersonating their views.
 
 ## Default short record
 
-```text
-Problem and evidence: <segment/tick/agent; observation versus explanation>
-Change location and rationale: <user file/function/version, or the missing observation>
-Verification and retention: <check and actual result; candidate/best locations; unknowns and next step>
-```
+~~~text
+Objective and gap: <primary metric, direction, target; best verified value and evidence level; remaining problem>
+Mechanism and change: <observation separate from explanation; user file/function and candidate version; decision to change>
+Checks and quality: <smoke result; actual candidate-solver evaluation, baseline/candidate primary metrics, major regressions and resources>
+Promotion evidence: <development/screening/independent validation/authoritative result; completed, failed, missing or timed out; unverified parts>
+Decision and next step: <candidate/best locations by evidence level; acceptance or rejection; next mechanism or specific pause condition>
+~~~
 
-Passing a smoke check does not establish a performance gain; performance claims require relevant, comparable measurements. When retaining a candidate, also preserve the previously verified best version. A candidate with insufficient evidence does not automatically become the new best version. A budget is a ceiling, not a spending target. Expand checks or use the longer card only for a specific unresolved question whose result would change the next decision.
+Write “not measured” when the primary metric is unavailable, not zero. Write “not obtained” for missing authoritative results. Do not subtract values from different evidence levels, conditions, or objectives. Reference an existing record that answers a field instead of copying raw output.
 
-## Before the experiment: define the hypothesis and comparison
+**A smoke pass cannot complete acceptance of a quality optimization.** See [quality evaluation](quality-evaluation.md) and the [execution workflow](autonomous-research.md) for comparison and promotion requirements. A narrowly scoped repair may report “tested failure fixed; overall quality not evaluated.” If the overall task still has a quality target, continue with the remaining gap.
 
-```text
-The phenomenon I want to explain:
-Conditions in my environment and evaluation relevant to this question:
-Relevant case, if any; similar conditions, differences, and signs it does not apply:
-Locations and evidence for the baseline and best verified version:
-My current explanation:
-Another possible cause of the same phenomenon:
-What I will change and what I will hold fixed:
-What I expect to observe if each explanation is correct:
-Results that would make me abandon or revise my current explanation:
-Candidate acceptance criteria and hard constraints that must not regress:
-This round's budget and remaining total budget; stopping conditions:
-```
+## Before implementation: turn a mechanism into a distinguishing prediction
 
-In interactive mode, add only omissions that affect the conclusion. In autonomous mode, the agent proposes testable hypotheses and review findings. Neither mode may fabricate data, results, or statements by the user. If a causal hypothesis does not yet yield predictions that distinguish it from alternatives, narrow the question before an expensive experiment. For fact checks or interface verification, state what the check can answer without manufacturing another explanation.
+When expansion helps, add only fields needed for the current decision:
 
-## After the experiment: separate facts from judgments
+~~~text
+Relevant objective, hard constraints, and actual evaluation rules:
+Baseline/best locations, results, and conditions for reuse:
+Main remaining loss and supporting code, trace, or per-case evidence:
+Current mechanism explanation and evidence that would contradict it:
+Decision to change, scope, and what stays fixed:
+Why representative evaluation covers expected gains and possible costs:
+Acceptance criteria and evidence needed for promotion at each relevant level:
+Known run cost, actual resource limits, and timeout:
+~~~
 
-```text
-Identifiers for the code/configuration and data actually tested:
-Expected samples and samples actually completed; failures/timeouts:
-Changes before and after the new step within the same run, if applicable:
-Results and resource use within the scope actually run:
-Changes in key constraints and secondary metrics:
-Actual evaluation results (write "not obtained" if unavailable):
-What the observations support and what they cannot prove:
-Assumptions behind the conclusion; new evidence that would make me reconsider:
-Accept, reject, or pending confirmation; location of the retained best version:
-My choice of next step and the reason for it:
-```
+Consult the [algorithm playbook](algorithm-playbook.md) for mechanisms and [real cases](reasoning-cases.md) for related experience. These support predictions, not results for the current user. A simple implementation error needs no invented competing hypothesis. A legal but low-quality solver need not contain a bug to justify algorithmic improvement.
 
-Keep conclusions within the scope actually checked: local checks do not establish gains in full execution, and local results cannot automatically be converted into server scores. A gain close to observed variation may be marked "unconfirmed" without mandatory repetition. Choose a paired or repeated experiment only if resolving that uncertainty would change the next decision. In autonomous mode, run necessary experiments within the budget; in interactive mode, guide the user's choice. Reuse valid evidence when there are no new concerns; do not default to experiment matrices, full A/B evaluations, random-seed sweeps, or repeated baselines.
+## After running: retain comparable facts
 
-## A short feedback structure for interactive mode
+~~~text
+Actual code/configuration, inputs, environment, entry point, and resource conditions:
+Whether the candidate solver actually made planning/repair decisions:
+Expected cases and completed cases; missing results, failures, timeouts:
+Primary metric and key constraints; per-case gains and major regressions:
+Validity of the baseline comparison; resource cost and run variation:
+Whether data supported development, screening, or validation untouched by selection:
+Authoritative target result, or a note that it was not obtained:
+What observations support and cannot establish; candidate decision:
+~~~
 
-“You observed …, which supports …; at present, we still cannot rule out …. What do you plan to observe to distinguish these explanations?”
+Do not retain only successful or improved cases. Fixed-action replay does not automatically establish a new planning policy's benefit, and estimated plan quality does not automatically establish execution quality. Reuse baselines only under matching conditions; otherwise obtain the needed comparison rather than borrowing unrelated evidence.
 
-When the evidence is sufficient, acknowledge the scope of the conclusion directly and move forward. Do not create an endless series of counterquestions. When the user requests a direct explanation, give a clear account, then invite them to apply the judgment to their own problem.
+When gains approach variation, use a bounded comparison that determines acceptance or retain an unconfirmed candidate; do not expand into an aimless matrix. When quality fails to improve or authoritative results decline, first record the measured regression and unknown cause. Do not assert overfitting without evidence. Preserve the preceding best version; a local candidate cannot replace the authoritative best.
 
-## When concluding a piece of research
+## Updating the direction and ending a stage
 
-Summarize why the method may work, its assumptions, environments still lacking evidence, and ways to recognize failure. In autonomous mode, the agent delivers this summary from the records; in interactive mode, invite the user to explain first. Save the user's own reproducible version and results. Reaching the defined goal does not establish a generally optimal solution for every Flatland task.
+Keep a short account of **remaining loss → tried mechanisms and results → other feasible directions → next evidence or missing condition**. After rejecting a candidate, update the explanation and select another mechanism; one failed attempt does not end the whole task. For a pause, use the [stopping rules](autonomous-research.md) to state the specific condition and what resumption needs.
 
-When sharing research experience, use only material the user has explicitly permitted to be shared. Fictional examples are sufficient to explain a method; there is no need for the source project's parameters, code, commit identifiers, or winning configuration.
+Conclude whether the primary target has corresponding evidence, which reliable versions remain, which mechanisms succeeded or failed, and within what scope. State when the target remains unmet; do not claim universal optimality or guarantee success. Share only authorized material; the source author's code, parameters, commit identifiers, and winning combination are unnecessary.

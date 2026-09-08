@@ -1,76 +1,84 @@
-# Explain the loss before choosing where to change the code
+# Diagnose the target gap, loss, and improvement mechanism
 
 [简体中文](../diagnosis.md) | **English**
 
-Start from the user's current problem, not an algorithm. Diagnose only as far as needed for the next decision. If the fault is already located, verify it directly instead of retracing this entire guide.
+Diagnosis should help choose a mechanism that can improve the current objective. It addresses errors and also **legal programs whose plans execute as intended but whose solutions are poor**. Move to a decision when evidence is sufficient; do not mechanically repeat the whole process.
 
-## 1. Connect evaluation to actual code
+## 1. Establish the objective, then inspect remaining loss
 
-Locate the relevant call sites in the current project and note them in existing logs:
+Obtain the primary metric, direction, target value or completion condition, hard constraints, and best verified result from the request and evaluator. Distinguish official/server metrics, official local results, and custom proxies. Do not replace an unknown primary metric with waiting counts or aggregate cost.
 
-| Relationship to establish | Evidence to inspect |
+Build a short gap table from existing per-case results:
+
+| Loss or unresolved part | Relationship to the objective | Current evidence | Candidate explanation or next observation |
+| --- | --- | --- | --- |
+| An observed failure, quality gap, or resource bottleneck in the user's project | Verified scoring effect; say when it cannot be quantified | Version, instance/segment, metric, or relevant function | A mechanism explanation and how to distinguish it |
+
+Unfinished tasks, late arrivals, and waiting can overlap; do not simply add them. If the known evaluator permits a reliable decomposition, use it to rank losses. With an unknown formula, investigate actual returned primary results and traceable cases rather than inventing precise gain estimates.
+
+Call loss unavoidable only when rules or a justified bound establish it. A single-agent relaxation may reveal one kind of improvement opportunity without decomposing multi-agent interaction or proving full-episode optimality. Keep the rest unexplained; failure to improve is not a theoretical limit.
+
+Address localized hard-constraint failures first. Otherwise select a direction using objective loss, evidence, mechanism potential, and implementation/evaluation cost. The easiest small fix is not necessarily the quality gap most worth addressing.
+
+## 2. Connect the objective to current source code
+
+Read the relevant call chains and record the current user's files/functions:
+
+| Relationship | Evidence to inspect |
 | --- | --- |
-| Which losses affect the objective, and which are secondary observations | Evaluator, primary metric, and hard constraints. Unfinished tasks, lateness, and waiting can overlap; do not add them directly or infer scores without scoring rules. |
-| Which time, direction, and occupancy the plan describes | Planning interface and path consumer. Establish before/after-step timing, speed/interval semantics, and occupancy after reaching a target. |
-| How the plan becomes actual actions | Action conversion, state updates, and control call sites. Compare planned and actual fields only at matching times and with matching semantics. |
-| What changes future plans after a failure | The project's malfunction handling, repair entrypoints, and shared state. Do not assume a required algorithm architecture. |
-| Which computation is worth optimizing | Existing timings or minimal profiling. Separate planning, simulation, logging, and framework overhead; code length does not locate a bottleneck. |
+| Which decisions affect the primary metric | Evaluator, candidate selection, cost and penalty calculations. Check whether proxies correspond to final evaluation. |
+| How the initial plan is formed | Path search, task/agent ordering, constraint representation, and failure returns. Separate infeasibility, search failure, and budget truncation. |
+| What subsequent search changes | Neighborhood generation, affected-agent selection, acceptance/best-solution logic, actual visits, and exits. |
+| How plans become actions and occupancy | Plan consumers, action conversion, speed/interval semantics, tick phases, and states after arrival. |
+| How events change coordination | Malfunction handling, dependencies, shared constraints, partial repair, and plan handoff. |
+| Where limited computation goes | Profiling or relevant timings, separating useful search, repeated maintenance, simulation, logging, and framework overhead. |
 
-Identify actual user files/functions and verified relationships rather than producing a generic architecture diagram. Trace tools cannot infer which source function to change; the agent establishes that mapping by reading the current project.
+A trace tool cannot infer the function to edit or prove a module necessary in the user's project. Verify responsibilities in actual code rather than prescribing a final combination first.
 
-## 2. Select a segment that matters to the objective
+## 3. Distinguish errors from quality bottlenecks using evidence
 
-Prioritize the reported error, a hard-constraint violation, or an instance contributing substantial loss to the actual objective. If only aggregates exist, first find one traceable per-instance result. Do not rerun the whole benchmark by default.
-
-Distinguish three statements:
-
-- **Observation:** Directly supported by code, state, or evaluation, such as the first recorded disagreement with a plan.
-- **Explanation:** A proposed cause, such as action mapping possibly using the wrong direction.
-- **Verified repair:** The original failure segment passes relevant checks after a change under the same semantics. The claim remains limited to tested behavior.
-
-Find the earliest divergence that may explain later symptoms instead of optimizing the final congestion symptom first. The earliest recorded divergence can still be later than the true cause. If the segment starts with an already abnormal state, obtain relevant earlier context.
-
-## 3. Choose an investigation from the evidence
-
-| Evidence | First question to resolve | Likely location of the decision |
+| Current evidence | What to verify first | Mechanisms to investigate |
 | --- | --- | --- |
-| Planned and actual position, direction, or occupancy differ at the same tick | Are clocks aligned, has the plan been replaced, and do action/state conversions agree? | Locate the path consumer or state update first. Related to C5; do not switch search methods before excluding mapping errors. |
-| Explicit waiting dependencies recur | Identify blockers, reservation/occupancy sources, known release events, legal transitions, and participants outside the segment. | The user's coordination, repair, or constraint maintenance. A cycle is a clue, not a deadlock proof; choose C2, C3, or C5 from evidence. |
-| The plan is invalid, absent, or rejected | Check interface rules, legal transitions, rejection reasons, and input completeness. | Planning or constraint checks. Failure to find a plan does not prove infeasibility or justify extra search budget by itself. |
-| Search stalls or visits concentrate on a few opportunities | Inspect actual visited states, acceptance records, best-solution return values, and candidate coverage. | C1 or C6 helps distinguish state/return bugs from a need to change search choices. |
-| A method helps weak starts but adds little to the current system | Is the mature starting state comparable, and does an unresolved need for the capability remain? | C2: establish marginal value before replacing or abandoning work, without duplicating existing capabilities. |
-| Aggregate gains disagree with actual evaluation rankings | Verify versions, per-instance losses, aggregation, and scoring boundaries. | C4: correct the selection criterion rather than substituting tool counts for the objective. |
-| Runtime is the main loss | Inspect representative timings, repeated construction work, and recovery behavior. | C3 or the actual current hotspot; establish whether local gains could affect the objective before optimizing a negligible cost. |
+| Plan and execution differ at the same time | Clock, plan version, action and state conversion; move backward to an explanatory divergence | Plan consumption, state handoff, or execution constraints. Do not replace search before ruling out mapping errors. |
+| A legal plan executes reliably but the objective remains poor | Which agents, resources, or decisions concentrate loss, and why current choices retain it | Initial order, objective calculation, candidate comparison, and bottleneck coordination. Quality research does not require a bug. |
+| Failed or high-loss agents share an interaction | Specific conflicts/dependencies, corridor or time constraints, and feasible alternatives | Change ordering, affected sets, or joint neighborhoods so coordination that isolated changes cannot express becomes a candidate. |
+| Search fails to find plans or frequently exhausts its budget | Legal transitions, overly strong constraints, rejection reasons, state representation, and actual expansions | Search representation/pruning, constraint granularity, or resource allocation. Do not equate failure to find with infeasibility or merely add time. |
+| Candidates repeat and a mature plan rarely improves | Visit distribution, decisions the neighborhood can change, best-solution retention, and exit reasons | First fix missed visits or storage errors. If behavior is correct, consider coverage, neighborhoods, or search selection rather than only relaxing acceptance. |
+| Static plans look good but execution regresses after events | First handoff difference, blocker source, repair scope, and acceptance criteria | Dependency execution, repair of affected parts, and replacement rules. Let the event justify scope; larger is not automatically better. |
+| Computation limits quality | Hotspots, repeated construction, useful search and quality change per available resource | Incremental maintenance, reuse, search allocation, or coverage. Assess throughput benefits through actual time-limited quality. |
+| Local improvement but actual scoring regression | Code/result association, evaluation rules, per-case changes, timeouts, and condition differences | Identify the layer where regression occurs. An unknown cause does not justify diagnosing overfitting or declaring the direction exhausted. |
 
-A stationary position does not imply a wasted step: a slow train may progress within a cell, and waiting may be required by constraints. Counts of stationary observations, cycles, and conflicts are not a decomposition of score loss.
+An unchanged position is not automatically wasted time: a slow agent may still advance within a cell, and waiting may be necessary for feasibility. A waiting cycle is a lead; check external participants, available transitions, and release events before calling it deadlock.
 
-Call loss unavoidable only when rules or justified bounds establish that conclusion under the current conditions. Leave the rest unexplained. Unexplained loss is not automatically removable by an algorithm, and lack of current improvement is not a theoretical limit.
+Use the [algorithm playbook](algorithm-playbook.md) to explain which representation or decision changes and why that could affect current loss. Use [real cases](reasoning-cases.md) to inspect conditions and failure modes of similar attempts. Choose a direction supported by evidence; do not install algorithms in order or force every problem into an existing case.
 
-## 4. Turn the judgment into one change
+## 4. Form a testable improvement decision
 
-After selecting a [decision case](reasoning-cases.md), state which branch the observation supports, what would refute it, and which user function should be inspected or changed. If no case fits, reason from current evidence without forcing a match.
+Separate observation, explanation, implementation, and measured outcome:
 
-Prioritize located hard-constraint failures; otherwise weigh the objective loss, strength of evidence, edit scope, and verification cost. Do not invent numerical benefit scores or pursue several directions at once.
+- **Observation** comes from code, state, or evaluation, such as poor achieved quality in a class of instances.
+- **Explanation** states why the current mechanism may cause the loss and what would contradict it.
+- **Implementation** identifies the user's files/functions and the decision to change, not just an algorithm name.
+- **Measured outcome** reports whether the candidate improved the primary objective, affected constraints or costs, and the scope of evidence.
 
-When evidence is missing, collect only observations that could change the decision, such as one failure tick's plan, action, actual state, and blocking reason. Reuse logs or add a removable observation point rather than building full telemetry first. State the scope if observation overhead could affect timing or behavior.
+When key evidence is missing, add an observation that changes selection rather than building full telemetry first. Algorithm research does not require proving a software bug: an observed quality gap, plausible mechanism, and discriminating evaluation can justify a bounded candidate implementation.
 
-A decision can be brief:
+Before implementation, choose real evaluation cases that expose both the intended benefit and plausible regressions. Evaluate sufficiently long actual execution when a policy affects the full episode. Fixed-action replay or a synthetic toy case is not quality evidence. See [quality evaluation](quality-evaluation.md).
 
-```text
-Problem and evidence: <run/segment/tick/agent; observation versus proposed explanation>
-Change location and rationale: <user file/function; connection to objective, or one missing observation>
-Verification and retention: <smallest check and actual result; candidate/best version; unknowns and next step>
-```
+## 5. Negative results update the direction instead of automatically ending work
 
-## 5. Confirm the segment without broadening the claim
+Keep a short frontier to avoid unsupported repetition:
 
-Use an existing native reproduction entrypoint when available. Otherwise adapt logs and replay through the [tool protocol](tooling.md). Verify field meanings, clock alignment, and segment completeness before relying on diagnostics.
+| Main remaining loss | Tried mechanisms and evidence | Different mechanisms still available | What the next decision needs |
+| --- | --- | --- | --- |
+| Current user evidence | Implementation failure, ineffective mechanism, local gain, or verified regression | Relevant alternatives in representation, order, neighborhoods, execution/repair, or throughput | An observation, implementation, or quality comparison; specify any missing condition |
 
-- `diagnose` locates recorded divergence, conflicts under declared semantics, and explicit wait relations to guide inspection.
-- `slice` narrows reading scope; it does not create runnable environment state or restore external trains or random state.
-- `replay` runs an explicitly selected project adapter with an actual checkpoint and actions. Reproduction needs sufficient environment, train, event, and random state; positions alone are insufficient.
-- `reservations` replays reservation events and checks supplied observations. Without actual snapshots, it checks only the event model's internal behavior.
+For example, if isolated changes cannot alter the relevant agents' mutual constraints, consider a neighborhood capable of changing those decisions together. If the neighborhood can express the opportunity but rarely visits it, inspect selection and budget. If a wrong proxy rejects useful opportunities, inspect the objective criterion. These are evidence-driven shifts between levels, not a prescribed pipeline.
 
-Public synthetic examples demonstrate tool behavior only. Resolve mismatches in project rules, adapters, or data before treating tool success as Flatland validation.
+After rejecting a candidate, inspect the main remaining unexplained loss. No gain may end that direction without ending the user's overall objective. If the currently supported frontier has genuinely been investigated, state the remaining alternatives and their missing conditions, then preserve state and explain the pause under the [execution workflow](autonomous-research.md).
 
-After confirming a local repair, retain results through the [execution and stopping workflow](autonomous-research.md). Leave unmeasured whole-system performance unconfirmed, and expand checks only for a decision-changing question. Feed new evidence back into the diagnosis rather than defending the first selected case.
+## 6. Tools and limits of conclusions
+
+Prefer the project's native evaluation and reproduction entry points. Use [trace tools](tooling.md) when relevant: first-divergence and explicit-wait diagnosis, readable slices, actual adapter execution, and reservation-event checks against observed snapshots. Slicing is not simulation; replay depends on sufficient state and a faithful adapter; the synthetic runner does not represent Flatland.
+
+A local check can confirm a repair on the tested behavior. Optimization conclusions also require actual candidate-solver quality comparisons and corresponding promotion evidence. Use the [experiment record](experiment-card.md) for the gap, mechanism, measured change, best version, and next step. Successful diagnosis is not an improved score.
