@@ -14,6 +14,14 @@ Do not repeat every layer on every edit. Reuse existing baseline results when co
 
 Compare native values for the same objective. Do not replace an official score with average completion, speed, or local wait counts merely because they are convenient. Check the actual denominators, penalties, weights, and aggregation first; keep failures instead of dropping them before averaging. Show harmed scenarios even when the total improves. When server performance falls, check the evaluated version, metric definitions, inputs, and actual failure modes first. Overfitting is one possible explanation, not a conclusion established by a screenshot of lower scores.
 
+## Evaluate toward full marks on the current benchmark
+
+Use the user's actual scoring rules to define full marks and the remaining gap; do not ask for a target value when none has been specified. Read available material or directly request missing current scores, detailed results, and rules. If no run exists, establish a baseline through the native entry point rather than manufacture scores from synthetic examples.
+
+Directed parameter and combination trials follow the same quality route: screen a few meaningfully different candidates and refine useful regions. A cheap change with broad effects may go directly through the complete native suite. Do not split an inexpensive real evaluation into multiple rounds merely to satisfy a staged format.
+
+Keep validation scoped to the specified benchmark. For a fixed public suite, freeze the candidate, rerun the full suite, and report that result. If cases informed selection, label that honestly rather than claim unseen-scenario generalization. The absence of an extra held-back set does not prohibit further optimization or obtaining official results. If the target includes hidden cases or random malfunctions, reserve relevant independent instances/run conditions to check selection bias; good proxy validation still does not prove hidden-set full marks. The actual rules determine evidence of attainment, without adding a universal cross-benchmark optimality task.
+
 ## A runnable result comparator
 
 From the repository root:

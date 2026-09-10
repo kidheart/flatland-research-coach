@@ -2,11 +2,23 @@
 
 # Question and Hint Bank
 
-Select material according to the current problem; there is no fixed questionnaire or hidden “full-score answer.” In autonomous mode, use these questions as internal research and review prompts: inspect evidence, design checks, and run them. Do not stop for user answers just because a prompt is phrased as a question. The guidance below for stuck learners, progressive hints, and waiting for answers applies only to explicitly selected interactive mode. In that mode, choose the one or two most informative questions and use existing information to reduce follow-up questions.
+Read code and available material first; there is no fixed questionnaire or hidden “full-score answer.” **If current scores, detailed results, or rules are missing, actually send the intake question to the user** rather than keeping it as an internal prompt. Continue independent source inspection and evaluation preparation while awaiting the answer. Other research questions are internal prompts in autonomous mode: the agent investigates, implements, and evaluates instead of waiting for user answers each round. The guidance for stuck learners, progressive hints, and waiting below applies only to explicitly selected interactive mode; choose the one or two most informative questions there.
+
+## Information to obtain at takeover
+
+First read the actual solver, latest and historical best results with corresponding versions, component/per-case scores, and the current benchmark's rules and runtime limits. If the material is complete, assess the current solver and proceed to the next optimization without asking the user to repeat it.
+
+Ask directly for only the missing parts of this request:
+
+> Please provide the actual scores and versions for the current and historical best solver, component or per-case results, and this benchmark's scoring rules and runtime limits. Existing evaluation files or reports are welcome.
+
+Unless the user specifies another objective, state “I will continue toward 100% / full marks on this benchmark.” **Do not ask which target they want or whether pursuing full marks is worthwhile.** If the rules define no full score, ask only how the evaluation defines the best result; do not silently turn completion rate into a scoring percentage. Respect requests limited to a specific repair or learning task.
+
+The internal takeover assessment should answer what planning and coordination capabilities the code actually has, where the gap lies, and whether it calls for an architecture upgrade or improvement of an existing strong solver. For example, a simple implementation lacking joint coordination with many mutually blocked agents warrants a substantially stronger combined candidate; a mature near-full-score solver warrants targeted trials on the remaining loss. Neither algorithm names nor the total score alone establish this judgment.
 
 ## Goals and benchmarks
 
-**Use when:** A user says “I want 100%,” asks “Why did I not get a full score when everything finished?”, or directly applies someone else's results.
+**Use when:** Checking the scoring meaning of the default full-marks objective, explaining “Why did I not get a full score when everything finished?”, or examining someone else's results. These are rule-inspection or optional teaching prompts, not a request to choose the goal again.
 
 Possible questions:
 
@@ -26,7 +38,7 @@ Possible questions:
 - “What else could produce the same observation? What would you need to record to distinguish the explanations?”
 - “If your proposed cause were absent, where should this trajectory differ?”
 
-If the user is stuck: Suggest aligning planned positions, actual positions, available actions, and external events in a small example of their own. Locate the first divergence before suggesting a replacement for the overall algorithm.
+If the user is stuck: For suspected execution errors, align planned positions, actual positions, available actions, and external events in a small example of their own. If execution is correct but quality is poor, inspect ordering, coordination, and candidate selection directly. Do not require a trace divergence before allowing an algorithmic upgrade.
 
 ## The interface between planning and execution
 
@@ -42,17 +54,17 @@ If the user is stuck: Choose a very short trajectory they create themselves, and
 
 ## Experiments that distinguish explanations
 
-**Use when:** A user plans to change several parameters or replace multiple modules at once, or keeps adding random attempts.
+**Use when:** Choosing parameter, algorithm-combination, or architecture-upgrade candidates and using bounded evaluation to determine the next step.
 
 Possible questions:
 
-- “What question should this experiment answer? What result does each of two reasonable explanations predict?”
+- “Which genuinely different choices does this trial compare, and which scoring components could benefit or suffer?”
 - “How can you change only the parts relevant to your hypothesis? If parts must change together, how will you interpret their interaction?”
-- “What result would make you stop pursuing this approach?”
+- “What result would make you retain, revise, or reject this candidate, and which decision level could you explore next?”
 
-If the user is stuck: First rewrite “I want to improve it” as a specific causal claim, then choose a small experiment capable of refuting it. Allow justified combined experiments; do not turn the advice to change one variable at a time into an absolute prohibition.
+If the user is stuck: Turn “I want to improve it” into a comparable choice, such as ordering diversity or joint-replanning scope, then select representative evaluation that can expose actual quality differences. A complete causal explanation may follow the results; bounded trial and error on the current benchmark is legitimate. Allow cooperating modules to be upgraded together without mandatory single-variable experiments or complete ablations. Do not default to a full parameter sweep.
 
-## Starting points and generalization
+## Starting points and scope of applicability
 
 **Use when:** A new method works only on a weak initial solution, tuning always uses the same few maps, or a user wants to copy someone else's configuration directly.
 
@@ -62,7 +74,7 @@ Possible questions:
 - “Which cases influenced your choices? What independent samples could test this explanation?”
 - “If the map distribution, speeds, malfunction mechanism, or information visible at decision time changed, which parts of your reasoning would still hold?”
 
-If the user is stuck: Ask them to write down the method's assumptions, then choose a small, controllable change that tests one of them. Define the scope of the conclusion first. Do not treat success on a few cases as applicable to all Flatland environments.
+If the user is stuck: Ask them to state the method's assumptions, then test benefits on current-benchmark cases withheld from selection or through available authoritative evaluation. Optimizing this benchmark is a valid goal; promotion does not require demonstrating generalization to other benchmarks. Bound conclusions to the evidence. When screening cases are reused for stability checks, label that purpose accurately.
 
 ## Time and workload
 
@@ -92,14 +104,14 @@ If the user is stuck: Put changes within a stage of one run, differences across 
 
 User: “I added a step that lowers the plan cost, so the final score must be higher.”
 
-Coach: “Was that cost recorded after generating the plan or after complete execution? Do your scoring rules use it directly?”
+Agent: “Was that cost recorded after generating the plan or after complete execution? Do your scoring rules use it directly?”
 
 User: “Only after plan generation. Malfunctions can still occur during execution.”
 
-Coach: “Then the evidence currently supports an improvement in the planning stage. How would you design a comparison to distinguish a benefit that survives execution from one canceled out by later disturbances?”
+Agent: “Then the evidence currently supports an improvement in the planning stage. How would you design a comparison to distinguish a benefit that survives execution from one canceled out by later disturbances?”
 
 User: “Start from the same input, run to completion, and record both the results before and after the new step and the final result.”
 
-Coach: “That separates several levels of the result. If both runs are time-limited, what else would you need to record to avoid attributing a difference in workload to the new step?”
+Agent: “That separates several levels of the result. If both runs are time-limited, what else would you need to record to avoid attributing a difference in workload to the new step?”
 
 This dialogue illustrates how to proceed gradually in response to the user's answers. It does not require the user to guess a designated algorithm, and it does not provide the source project's implementation.

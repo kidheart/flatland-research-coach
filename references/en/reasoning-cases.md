@@ -6,9 +6,9 @@ These cases come from one Flatland research effort, rewritten after the creator 
 
 Source code, exact parameters, version identifiers, per-instance scores, and raw logs are omitted. This is a qualitative report grounded in records, not an independently reproducible public performance comparison. Each card separates real history and its limits from current decision rules; those rules add no historical facts.
 
-## Diagnose first, then select a relevant card
+## Inspect the current solver and scores, then select a relevant card
 
-Start with [diagnosis and modification decisions](diagnosis.md). Diagnose from current project evidence before drawing on a similar case; these six cases may not cover your environment. The hypotheses in this index require checking, rather than following directly from the observations.
+Start with [diagnosis and modification decisions](diagnosis.md). Inspect what the current algorithms can do, the current and best scores, and the detailed losses. Ask directly for missing scores or rules; unless another target is set, pursue 100% / full marks on the current benchmark. Then draw on relevant cases instead of asking the user to choose a card to begin. These six cases may not cover the environment. Their hypotheses do not follow automatically from the observations, but can justify a reasonable next experiment.
 
 | Current observation | Diagnostic hypothesis to check | Card |
 | --- | --- | --- |
@@ -20,6 +20,17 @@ Start with [diagnosis and modification decisions](diagnosis.md). Diagnose from c
 | The same candidates get priority while later ones receive few visits | Traversal omissions, budget truncation, or an unsuitable coverage policy | C6 |
 
 Modification locations identify conceptual responsibilities in **the current user's source**, not the original author's implementation. Use the [algorithm playbook](algorithm-playbook.md) to choose decisions that can change results. Smoke checks establish implementation behavior; optimization candidates then enter [quality evaluation](quality-evaluation.md). Actual solver quality is needed to support improvement. Stopping below means rejecting the particular candidate, not automatically ending the user's objective. See the [autonomous workflow](autonomous-research.md) for continuation and resource limits.
+
+## What to carry forward from these experiences
+
+This research also depended on actively combining ideas and trying alternatives. Combine space-time search, resource ordering, related-group replanning, and execution coordination according to current needs, then examine route/timing diversity, reservation maintenance, search coverage, and budget allocation. These are transferable decision dimensions, not the original pipeline or a requirement to install every module.
+
+- **Unlock missing capability first.** C2's gains from weak starts suggest that adding joint coordination to a simple solver may matter more than tuning single-agent search. For a mature solver, check whether equivalent capability already exists before appending another stage.
+- **Make engineering changes serve quality.** C3's time savings and C6's coverage show that useful candidate throughput and overlooked opportunities are also search-design decisions. Actual quality still determines their value.
+- **Use failure to change the next attempt.** C1 and C5 report particular unsuccessful candidates. They do not establish that temporary deterioration is useless or broader repair always harms. Try another neighborhood, parameter region, combination, or scenario, or move to an unexplored decision.
+- **Learn against the user's benchmark.** C4 calls for actual scoring feedback, not avoidance of benchmark-specific adaptation. Limited trials prove neither causality nor optimality but can guide the next version. Preserve those distinctions without requiring proof before acting.
+
+The cards retain differences in evidence strength to support accurate reuse, not to create a list of experiments agents must never attempt.
 
 ## C1: Relaxed acceptance changed exploration but did not improve the result
 
@@ -35,7 +46,7 @@ Modification locations identify conceptual responsibilities in **the current use
 - Visits repeat the same states: inspect candidate generation, deduplication, and neighborhood selection. Make a local change where evidence identifies the repetition; a plateau alone does not establish overly strict acceptance.
 - New states are explored but the best result does not benefit: keep the validated version and disable this candidate. More acceptances alone do not justify more effort.
 
-**Implementation check and quality decision.** From a relevant saved state, inspect visits, the best-solution record, and the returned value. A task limited to fixing the return bug can end when it is covered; optimization continues with representative quality comparisons of the actual candidate. If the mechanism changed without benefit, reject that candidate and consider whether remaining losses need different neighborhoods, priorities, or coverage. Retry the same acceptance rule only with new mechanistic or contextual evidence.
+**Implementation check and quality decision.** From a relevant saved state, inspect visits, the best-solution record, and the returned value. A task limited to fixing the return bug can end when it is covered; optimization continues with representative quality comparisons of the actual candidate. If the mechanism changed without benefit, reject that candidate and consider whether remaining losses need different neighborhoods, priorities, or coverage. When retrying an acceptance rule, change the parameter region, combination, or conditions and state the expected observation; prior proof of success is unnecessary.
 
 ## C2: Useful joint search need not justify an extra stage after a mature baseline
 
@@ -48,7 +59,7 @@ Modification locations identify conceptual responsibilities in **the current use
 **Evidence → modification and action.**
 
 - Starts differ or the stage does not run: fix saved-plan loading, stage integration, or result recording before broadening joint search.
-- Benefits occur only from weak starts: do not append the stage to the mature pipeline. If early work is a demonstrated bottleneck, assess replacing it at the stage-scheduling boundary.
+- The current user's solver is a weak start lacking joint coordination: consider that capability as a direct upgrade rather than rejecting it because it added little to the original mature baseline. For a mature pipeline with similar capability, assess replacing early work or changing stage scheduling instead of automatically appending it.
 - A reproducible remaining interaction is absent from the current group or boundary: locate group selection and joint-search boundaries and modify them for that interaction. Without such evidence and sufficient marginal benefit, keep the current version.
 
 **Implementation check and quality decision.** Use the same saved plan to confirm stage invocation and the remaining interaction, then compare the candidate with baseline continuation under comparable resources. Before integration, validate complete runs and check whether early gains persist. Reject an unhelpful added stage; the remaining objective can lead to initial order, neighborhood boundaries, or budget allocation instead of ending optimization.
@@ -65,7 +76,7 @@ Modification locations identify conceptual responsibilities in **the current use
 
 - Most cost lies elsewhere: address the actual hotspot instead of adding incremental-maintenance complexity.
 - State differs after undo, rejection, or an exception: fix reservation ownership, updates, or rollback first; suspend speed claims.
-- Repeated cost is substantial and state semantics are clear: introduce local reuse at reservation construction/update boundaries, preserving tested behavior. Do not change search strategy concurrently to explain the speedup.
+- Repeated cost is substantial and state semantics are clear: introduce local reuse at reservation construction/update boundaries. Keep search policy fixed when isolating the speed contribution; maintenance and policy may also form a coordinated candidate, without attributing its combined gain to one edit.
 
 **Implementation check and quality decision.** Compare updates, shared occupancy, rejection, and exception recovery locally, then check behavior and timing at fixed work. Repair state differences first. Once speed improves, an optimization task evaluates actual quality under the same total budget, checking whether saved time enables useful search. Report speed and quality separately. If only speed improves, examine budget allocation rather than ending the remaining objective by default.
 
@@ -112,13 +123,13 @@ Modification locations identify conceptual responsibilities in **the current use
 **Evidence → modification and action.**
 
 - Unexpected early exits, cursor resets, or omissions occur: fix candidate traversal/termination, initially preserving the budget.
-- Traversal is correct but trajectories reveal relevant opportunities in unvisited regions: make a small change to candidate ordering or budget allocation and check benefit within current resources.
+- Traversal is correct but trajectories reveal relevant opportunities in unvisited regions: change candidate ordering, search continuation, or budget allocation and check benefit within current resources.
 - Coverage is adequate, or gains require more time: do not attribute the cause to coverage. Stop this candidate if resource limits exclude it; otherwise report the resource-for-quality tradeoff.
 
 **Implementation check and quality decision.** From a relevant saved state, check visits and exits with and without improvement, then compare actual candidate quality under equal budgets to determine whether wider coverage changes results. Validate promising changes on scenarios not used for selection. If gains require more time, preserve that finding and assess the user's resource tradeoff. If coverage brings no benefit, revisit neighborhood expressiveness or objective selection; visit counts do not complete optimization.
 
 ## Make the decision concrete
 
-Record objective gap, evidence, user-source responsibility, mechanism change, implementation checks, measured quality, candidate decision, and next direction. A narrow bug fix can end within its scope; optimization continues to quality evidence. Investigate current losses when no case fits, without treating one failed attempt as a ban on an algorithm family.
+Record current capability and scores, objective gap, evidence or assumptions, user-source responsibility, candidate changes, implementation checks, measured quality, and next direction. A narrow bug fix can end within its scope; optimization continues to quality evidence. Investigate current losses and propose new candidates when no case fits. Neither one failed attempt bans an algorithm family nor several failed candidates establish a performance ceiling.
 
 After reaching the goal, preserve the successful version, failed attempts, and unknowns without exhausting alternatives. Success does not prove every module necessary. New cases need real evidence or a fictional label, separation of actual actions from recommendations, and a check for disclosure through combined cases. Interactive mode can discuss one key judgment; autonomous mode has the agent diagnose, modify, and validate.

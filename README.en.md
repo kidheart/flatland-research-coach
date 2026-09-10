@@ -4,21 +4,21 @@
 
 # Flatland Research Loop
 
-**Autonomous Flatland optimization aimed at measured solution quality**
+**Inspect the solver and scores first. Aim for full marks by default.**
 
-Start with your objective and existing solver, identify major losses, change planning, search, or execution decisions using algorithmic ideas, and run the candidate solver to see whether quality improves. The core loop is **objective gap → algorithmic mechanism → implementation → correctness check → quality comparison → validation and continuation.**
+Have the agent inspect your actual algorithms and implementation, read current and best scores, detailed results, and scoring rules, then choose changes with enough scope to address the gap. **Unless you set another objective, optimization aims for 100% / full marks on your current benchmark; there is no need to answer another target-setting question.** The core loop is **solver and scores → missing capabilities → algorithm combinations or targeted trials → actual quality feedback → preserve the best version → continue improving.**
 
 This agent-agnostic Markdown skill includes Python standard-library tools, Chinese and English guidance, and useful ideas alongside failed directions distilled from real research. Autonomous optimization is the default; learning through questions is optional. The author's full-score code, exact parameters, and reconstructable final combination are not included.
 
 ## What you get
 
-- **A defined objective and gap:** the actual primary metric, hard constraints, best verified version, and major remaining losses.
-- **A reason to change decisions:** which capability is missing, which user function changes, and why it could improve the objective.
+- **A clear starting point:** the algorithms actually running, current and best scores, associated versions, detailed losses, and scoring rules; missing essentials are requested directly.
+- **Changes suited to that starting point:** upgrade a simple solver's architecture when core capabilities are missing; use actual losses to improve combinations, search, or execution in a mature solver.
 - **Real quality feedback:** objective changes, per-case regressions, failures, and compute costs from runs in which the candidate solver participated.
 - **A recoverable best version:** correctness, screening, independent validation, and official confirmation remain distinct.
 - **A next action after failure:** update the loss explanation, change mechanisms, or address another relevant instance; rejecting one candidate does not automatically end optimization.
 
-Use it for valid but poor schedules, stalled search, disruption losses, or proxy gains accompanied by official-score regressions. Supply the project, existing results, evaluation rules, objective, and resource limits. The agent reads available material before asking for missing information.
+Use it for valid but poor schedules, stalled search, disruption losses, or proxy gains accompanied by official-score regressions. Start with your project and available scores. The agent reads the material, then bundles questions about missing current/best scores, detailed results, rules, or version information while continuing independent code inspection. If scoring is unclear, it establishes what full marks mean instead of equating all trains arriving with full marks or inventing a percentage. Your explicit alternative objective, narrow repair scope, and resource limits take precedence.
 
 ## Transfer ideas from algorithms
 
@@ -33,19 +33,24 @@ The [algorithm playbook](references/en/algorithm-playbook.md) connects research 
 
 In a synthetic bottleneck, A's better route is blocked by B's reservation. Replanning A repeatedly may never help. Releasing related decisions together and replanning that group changes which solutions search can reach. In another synthetic example, restarting a scan at its beginning after every gain can leave later blocking components untouched. **Change what search can express and actually visits, not merely how long it runs.**
 
+These ideas can work together: priorities allocate resource access, SIPP supports single-agent search under time constraints, and LNS allows interdependent blocking decisions to change together. Route choices, entry order, and waiting times create different candidates; incremental maintenance and fair coverage determine how many receive useful attention within the available time. Disruptions call for coordination or repair based on dependencies and actual state. These are selectable capabilities whose use depends on the current solver, results, and environment.
+
+For example, if a solver only plans in one fixed order and detailed results show many trains blocked by each other, prioritize alternative orders and joint replanning of related trains, strengthening low-level temporal search where needed. Several rounds of waiting-threshold adjustments need not come first. If a mature combination already completes nearly all trains, use its actual remaining penalties, execution losses, and search coverage to choose the next change.
+
 These are mechanism explanations; synthetic examples are not competition results. Real cases retain failures and conditional gains. Finding a mechanism in source code does not alone establish that it caused a score improvement.
 
-## Default workflow: verify correctness and quality separately
+## Default workflow: inspect the solver and scores, then pursue the gap
 
-1. **Define the objective and explain the gap.** Align evaluation rules, runtime constraints, and the best version. Inspect major losses and unexplained portions. A server regression has an unconfirmed cause; one regression does not establish overfitting.
-2. **Choose an evidence-backed mechanism.** Map the idea to current project code and predict a quality change and plausible costs, instead of remaining confined to parameter tweaks.
-3. **Reject broken implementations with a short smoke check.** Check affected interfaces, conflicts, or recovery behavior. Optimization proceeds to quality evaluation after a pass; a narrowly requested bug fix can finish within its own scope.
-4. **Screen representative instances.** Actually invoke the candidate solver through the native entry point, covering the target loss and plausible tradeoffs. Reuse matching baseline evidence rather than selecting only favorable cases.
-5. **Validate promising candidates.** Use relevant instances or independently reserved run conditions not involved in selection. Repeating screening cases checks stability, not unseen-scenario performance. An official-score target needs appropriate official evidence. Update the best version and address the remaining gap.
+1. **Inspect the existing solver and gather scoring information.** Follow the actual entry point into planning, search, and execution code to establish which capabilities are active. Read current and best scores, associated versions, per-case/component results, and scoring/runtime rules. Ask for missing essentials without requesting information already available or asking for the default target again.
+2. **Match the scope of change to the loss.** Aim for full marks by default. When a simple solver has structural limitations, actively choose a more capable algorithm combination. Preserve useful foundations in mature systems and address remaining losses. More algorithm names do not establish stronger capabilities; inspect implementation and results.
+3. **Implement or run purposeful trials.** Upgrade cooperating modules where needed, or compare a few plausible priority, neighborhood, acceptance, budget, or combination candidates. A reasonable expectation is enough to start a recoverable experiment; a complete causal proof is not a prerequisite. Results determine what to keep, adjust, or replace.
+4. **Measure actual quality after smoke checks.** Use short checks to reject interface, conflict, or recovery errors. Then actually run the candidate solver through the native evaluator on representative target-loss and regression scenarios. Reuse matching baseline evidence instead of selecting only favorable cases.
+5. **Validate promising candidates and preserve the best result.** Within the benchmark's scope, use instances untouched by selection, reserved run conditions, or the corresponding official evaluation. A fixed public suite can be rerun in full after freezing the candidate, but debugging cases cannot be claimed as independent generalization evidence. An official-score target needs appropriate official evidence; investigate evaluation and per-case differences when local and server results disagree.
+6. **Redirect after failure; address the remaining gap after success.** Record which combinations and conditions help, then direct computation toward new candidates or uncovered losses. A few reversions, an unsuccessful neighborhood, or a code comment cannot establish an algorithmic ceiling.
 
-Do not default to parameter matrices, seed sweeps, exhaustive ablations, or full A/B evaluations each round. Quality comparison is part of optimization. Fixed-action replay cannot establish an improved planning policy. Reserve full evaluations for promising versions, concrete regression risks, or target verification. See [autonomous research](references/en/autonomous-research.md) and [quality evaluation](references/en/quality-evaluation.md).
+**Tuning parameters and trying combinations for the current benchmark are legitimate optimization work.** Select candidates around the current gap and compare actual score and cost; do not default to huge parameter matrices, seed sweeps, exhaustive ablations, or full A/B evaluations each round. A combination that helps on the current evaluation can be retained while its explanation and stability evidence are developed further. Fixed-action replay cannot establish an improved planning policy. Reserve expensive full evaluations for promising versions, concrete regression risks, or target verification; an inexpensive native suite may simply be run in full. See [autonomous research](references/en/autonomous-research.md) and [quality evaluation](references/en/quality-evaluation.md).
 
-One failed direction does not end an unmet objective. When explicit resources run out or a required external condition is missing, preserve state and explain the unmet target and what is needed next. Pausing because currently feasible mechanisms appear exhausted requires evidence of explored mechanisms, remaining alternatives, and the conditions each lacks. Do not stop with an unsupported “no worthwhile next step” or spend indefinitely. Execution and permissions come from the host; the skill is not a background service.
+One failed direction does not end an unmet objective. Preserve the best version and continue examining alternative combinations, candidate coverage, and unexplained losses. If the user pauses, explicit resources run out, or a required external condition is missing, preserve state and report the remaining gap, explored evidence, and what is needed next. A short run without improvement does not justify declaring a ceiling. Execution and permissions come from the host; the skill is not a background service.
 
 ## Quality and trace tools
 
@@ -98,15 +103,21 @@ Give the agent the actual directory and send the following prompt. It does not r
 Read <skill-directory>/SKILL.en.md as the guidance for this task.
 Read its linked references as needed.
 My project: <actual path>
-Current problem or objective: <symptom or metric to improve>
-Available material: <locations of code, evaluation rules, traces, or results>
+Available scores and material: <current/best scores, detailed results, rules, and code locations; leave missing items blank>
+Current symptoms: <optional>
 Permitted changes and time budget: <scope and budget>
 
-Establish the actual metric, target, constraints, best version, and major quality gap.
-Use algorithmic mechanisms and real cases to choose a change. After smoke checks,
-run the candidate solver for representative quality comparison and validate promising candidates.
-Reuse matching baselines; do not default to parameter matrices or full A/B each round.
-If a direction fails, update the explanation and choose another. Smoke success is not optimization success.
+Inspect the algorithms and implementation actually running, then read scores and rules.
+Ask me directly for missing current/best scores, detailed results, associated versions,
+or scoring rules while continuing independent code inspection.
+Unless I set another objective, aim for 100% / full marks on the current benchmark;
+do not ask me to restate that default target.
+Choose the scope of change from the solver and its losses: actively upgrade combinations
+when core capabilities are missing; target remaining losses in mature systems.
+Purposeful parameter and combination trials are welcome; huge sweeps are not the default.
+After smoke checks, actually run the candidate solver for quality comparison, then validate promising candidates.
+Reuse matching baselines and preserve the best version. If a direction fails, choose another;
+do not treat it as evidence of a ceiling.
 Proceed within authorization and resources. Report quality changes, regressions,
 the best version, and the remaining objective.
 Respond in English. Switch to interactive coaching only when I explicitly ask
@@ -172,7 +183,7 @@ and help me design a small check that distinguishes the explanations.
 | [Trace tools](scripts/rail_trace.py) · [Synthetic examples](examples/) | Local evidence inspection tools and demonstration data. |
 | [Autonomous research guide](references/en/autonomous-research.md) · [中文](references/autonomous-research.md) | Bounded progress, actual checks, and version preservation. |
 | [Anonymized experiment cases](references/en/reasoning-cases.md) · [中文](references/reasoning-cases.md) | Conditions, observations, and bounded conclusions from six cases. |
-| [Question and hint bank](references/en/question-bank.md) · [中文](references/question-bank.md) | Questions for interactive coaching, used as needed. |
+| [Question and hint bank](references/en/question-bank.md) · [中文](references/question-bank.md) | Gather missing scoring information, with optional learning questions. |
 | [Experiment card](references/en/experiment-card.md) · [中文](references/experiment-card.md) | Record hypotheses, results, and decisions when further experiments are needed. |
 
 ## Privacy and evidence limits

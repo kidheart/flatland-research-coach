@@ -1,4 +1,4 @@
 interface:
   display_name: "Flatland Research Loop"
-  short_description: "围绕明确目标选择Flatland算法改动，用实际求解质量反馈持续优化"
-  default_prompt: "使用 $flatland-research-loop，明确我的目标与质量差距，结合算法思想改进求解器，冒烟后测量实际质量并验证有希望的候选，在授权和预算内持续推进。"
+  short_description: "先检查方案与成绩，默认向Flatland满分推进，用算法组合和实测持续优化"
+  default_prompt: "使用 $flatland-research-loop，先检查我的方案并读取或询问缺失的成绩和评分规则；默认向满分优化，按当前能力选择算法升级与试验，用真实质量反馈持续推进。"

@@ -7,7 +7,8 @@ Reuse the user's existing records. Keep decisions short by default and expand on
 ## Default short record
 
 ~~~text
-Objective and gap: <primary metric, direction, target; best verified value and evidence level; remaining problem>
+Intake and target: <current/best versions and scores, scoring-rule location; default full marks or explicit user target; missing information and question status>
+Solution and gap: <existing capabilities and major losses; reason for architectural upgrade or targeted strengthening; best verified value and evidence level>
 Mechanism and change: <observation separate from explanation; user file/function and candidate version; decision to change>
 Checks and quality: <smoke result; actual candidate-solver evaluation, baseline/candidate primary metrics, major regressions and resources>
 Promotion evidence: <development/screening/independent validation/authoritative result; completed, failed, missing or timed out; unverified parts>
@@ -18,7 +19,7 @@ Write “not measured” when the primary metric is unavailable, not zero. Write
 
 **A smoke pass cannot complete acceptance of a quality optimization.** See [quality evaluation](quality-evaluation.md) and the [execution workflow](autonomous-research.md) for comparison and promotion requirements. A narrowly scoped repair may report “tested failure fixed; overall quality not evaluated.” If the overall task still has a quality target, continue with the remaining gap.
 
-## Before implementation: turn a mechanism into a distinguishing prediction
+## Before implementation: establish why to try and how to choose
 
 When expansion helps, add only fields needed for the current decision:
 
@@ -26,14 +27,16 @@ When expansion helps, add only fields needed for the current decision:
 Relevant objective, hard constraints, and actual evaluation rules:
 Baseline/best locations, results, and conditions for reuse:
 Main remaining loss and supporting code, trace, or per-case evidence:
-Current mechanism explanation and evidence that would contradict it:
-Decision to change, scope, and what stays fixed:
+Current explanation or empirical conjecture; results that will determine acceptance:
+Decision to change, related edits or parameter/combination choices, and scope:
 Why representative evaluation covers expected gains and possible costs:
 Acceptance criteria and evidence needed for promotion at each relevant level:
 Known run cost, actual resource limits, and timeout:
 ~~~
 
 Consult the [algorithm playbook](algorithm-playbook.md) for mechanisms and [real cases](reasoning-cases.md) for related experience. These support predictions, not results for the current user. A simple implementation error needs no invented competing hypothesis. A legal but low-quality solver need not contain a bug to justify algorithmic improvement.
+
+An empirical trial may simply record why these meaningfully different candidates were selected, which performs better under matching conditions, and how the next round narrows the choice. Causal proof is not a prerequisite. When a combination improves without isolated attribution, retain the candidate and facts rather than demand exhaustive ablations; investigate attribution when it can change a decision. Necessary related upgrades to a weak starting solution may be validated together rather than split to satisfy a one-small-edit rule.
 
 ## After running: retain comparable facts
 
